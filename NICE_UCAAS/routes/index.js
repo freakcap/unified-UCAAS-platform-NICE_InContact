@@ -4,15 +4,16 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  res.redirect('/zoom', 307);
+  // res.send(res.body);
 });
 
-router.post('/',function(req, res, next){
+router.post('/sendmessage',function(req, res, next){
   if(!req) {
     res.sendStatus(404);
   }
   if(req.body.platform == "zoom"){
-    res.redirect('/zoom/send',307);
+    res.redirect('/zoom/sendmessage',307);
   }
   else if(req.body.platform == "teams"){
     res.redirect('/teams',307);
