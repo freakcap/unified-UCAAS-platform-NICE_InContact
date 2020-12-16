@@ -145,7 +145,7 @@ class App extends Component {
       };
     return (
       <div>
-        {/* <NavBar signedInUser={this.state.user} /> */}
+        <NavBar signedInUser={this.state.user} />
         <Container>
           <Row>
             <Col {...chatListProps} md={4}>
@@ -157,8 +157,8 @@ class App extends Component {
             <Col {...chatBoxProps} md={8}>
               <ChatBox
                 signedInUser={this.state.user}
-                // onSendClicked={this.createMessage.bind(this)}
-                // onBackPressed={this.toggleViews.bind(this)}
+                onSendClicked={this.createMessage.bind(this)}
+                onBackPressed={this.toggleViews.bind(this)}
                 targetUser={
                   this.state.userChatData[this.state.selectedUserIndex]
                 }

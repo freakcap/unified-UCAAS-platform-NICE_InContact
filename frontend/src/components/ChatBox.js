@@ -31,7 +31,7 @@ export default class ChatBox extends Component {
     if (!this.state.messageText) {
       return;
     }
-    // this.props.onSendClicked(this.state.messageText);
+    this.props.onSendClicked(this.state.messageText);
     this.setState({ messageText: "" });
   }
   onMessageInputChange(e) {
@@ -89,15 +89,15 @@ export default class ChatBox extends Component {
                   maxLength="3000"
                   autoFocus
                 />
-                {/* <InputGroup.Button>
+                <Button>
                   <Button
                     disabled={!this.state.messageText}
                     className="sendButton"
-                    // onClick={this.onSendClicked.bind(this)}
+                    onClick={this.onSendClicked.bind(this)}
                   >
                     Send
                   </Button>
-                </InputGroup.Button> */}
+                </Button>
               </InputGroup>
             </FormGroup>
           </div>
