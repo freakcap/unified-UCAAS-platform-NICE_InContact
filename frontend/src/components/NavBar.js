@@ -5,15 +5,15 @@ import Navbar from "react-bootstrap/Navbar";
  *
  * Renders top navbar and shows the current signed in user.
  */
-export default class NavBar extends Component {
+
+class NavBar extends Component {
   state = {};
   render() {
     return (
+      <>
       <Navbar inverse>
-        <Navbar.Header>
-          <Navbar.Brand>Cool Chat</Navbar.Brand>
-          <Navbar.Toggle />
-        </Navbar.Header>
+        <Navbar.Brand>Chat</Navbar.Brand>
+        <Navbar.Toggle />
         <Navbar.Collapse>
           <Navbar.Text pullRight>
             Signed in as:&nbsp;
@@ -21,6 +21,9 @@ export default class NavBar extends Component {
           </Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
+      </>
     );
   }
 }
+ 
+export default NavBar;
