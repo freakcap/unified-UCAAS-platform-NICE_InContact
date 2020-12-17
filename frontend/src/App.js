@@ -56,26 +56,32 @@ class App extends Component {
       {
         id: 2,
         name: "Pranav",
+        messages:[],
       },
       {
         id: 3,
         name: "Yash",
+        messages:[],
       },
       {
         id: 4,
         name: "Mark",
+        messages:[],
       },
       {
         id: 5,
         name: "Bill",
+        messages:[],
       },
       {
         id: 6,
         name: "Sam",
+        messages:[],
       },
       {
         id: 7,
         name: "Rohit",
+        messages:[],
       },
     ], // this contains users from which signed-in user can chat and its message data.
     user: {
@@ -92,33 +98,34 @@ class App extends Component {
   //   fetchUsers().then((users) => this.setState({ users }));
   // }
   onChatClicked(e) {
-    console.log("Clicked");
     this.toggleViews();
     let users = this.state.userChatData;
     for (let index = 0; index < users.length; index++) {
       if (users[index].id === e.user.id) {
         // users[index].unread = 0;
         this.setState({ selectedUserIndex: index, userChatData: users });
-        console.log(index)
         return;
       }
     }
   }
   createMessage(text) {
+    console.log("text", text);
+    let userChatData = this.state.userChatData;
     let message = {
       to: this.state.userChatData[this.state.selectedUserIndex].id,
-      message: {
         type: "text",
         text: text,
         date: +new Date(),
         className: "message",
-      },
+        position: "right",
       from: this.state.user.id,
     };
+    console.log(userChatData);
+    userChatData[this.state.userChatData[this.state.selectedUserIndex].id-2].messages.push(message);
+    this.setState({ userChatData });
   }
   toggleViews() {
 
-    console.log("Toggled");
     this.setState({
       showChatBox: !this.state.showChatBox,
       showChatList: !this.state.showChatList,
