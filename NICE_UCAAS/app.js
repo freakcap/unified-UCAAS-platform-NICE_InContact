@@ -4,6 +4,7 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 const bodyParser = require('body-parser');
+var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var zoomRouter = require('./routes/zoom');
@@ -11,7 +12,7 @@ var zoomRouter = require('./routes/zoom');
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-
+app.use(cors());
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');

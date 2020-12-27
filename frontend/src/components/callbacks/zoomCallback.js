@@ -8,13 +8,15 @@ class zoomCallback extends Component {
     console.log("Yo working");
     console.log(Buffer.from(`${process.env.REACT_APP_clientID}:${process.env.REACT_APP_clientSecret}`).toString('base64'));
     if(value.code){
-      axios.get(process.env.serverURI + "/auth",{
-        data :{
-          code : value.code
+      // replace with server URI
+      axios.get("http://localhost:3000" + "/zoom/auth",{
+        headers :{
+          authData: value.code.toString() 
         }
       })
-      .then((res)=>{return res.json()})
-      .then((res)=>{console.log(res)});
+      // .then((response)=>{return response.json()})
+      .then((res)=>{console.log(res)})
+      .catch((error)=>{console.log("caught")});
     }
     else{
       console.log("fiss");

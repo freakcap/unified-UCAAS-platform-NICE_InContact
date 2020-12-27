@@ -6,9 +6,9 @@ const request = require('request')
 var authcode = null;
 
 router.get('/auth', (req, res, next) => {
-    const encodedCredentials = Buffer.from(`${process.env.REACT_APP_clientID}:${process.env.REACT_APP_clientSecret}`).toString('base64');
-
-    var tokenUrl = "https://zoom.us/oauth/token?grant_type=authorization_code&code=" + req.data.code + "&redirect_uri=" + process.env.redirectURL + "/chat";
+    const encodedCredentials = Buffer.from(`${process.env.clientID}:${process.env.clientSecret}`).toString('base64');
+    // console.log(req.headers.authdata);
+    var tokenUrl = "https://zoom.us/oauth/token?grant_type=authorization_code&code=" + req.headers.authdata + "&redirect_uri=" + process.env.redirectURL + "/zoom_oauth_callback";
     axios.post(tokenUrl,
     {},
     {
@@ -17,8 +17,8 @@ router.get('/auth', (req, res, next) => {
         }
     }
     )
-    .then((response) => {return response.json()})
-    .then((response) => {res.send(response.body)});
+    .then((response) => {res.send(response.data)})
+    .catch((error)=>{console.log(error)});
 });
 
 router.get('/contacts', (req, res, next) => {
