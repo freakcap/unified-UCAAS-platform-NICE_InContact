@@ -21,6 +21,26 @@ router.get('/auth', (req, res, next) => {
     .catch((error)=>{console.log(error)});
 });
 
+router.get('/user', (req, res, next) => {
+
+    var options = {
+        method: 'GET',
+        url: 'https://api.zoom.us/v2/users/me',
+        headers: {authorization:"Bearer "+ req.headers.atoken}
+      };
+      console.log(authcode);
+        request(options, (error, response, body) => {
+            if (error) {
+                console.log('API Response Error: ', error)
+            } else {
+                body = JSON.parse(body);
+                console.log('API call ', body);
+                res.send(body);
+            }
+        })
+  });
+  
+
 router.get('/contacts', (req, res, next) => {
   //Enter Access Token
   var authcode = "eyJhbGciOiJIUzUxMiIsInYiOiIyLjAiLCJraWQiOiJmY2NjMmMxZC03OGVkLTQ5NTAtODI1ZC0zYWY0NTNhODA3NDYifQ.eyJ2ZXIiOjcsImF1aWQiOiIzMzU3MjdjMWE5Y2Y4ZWI0NGIwZWZmOGM2MGQyNTM0MSIsImNvZGUiOiJnYldLSWphc0xJX2NrM3d0SGFWUThDX1ZBVDZpUmhaQnciLCJpc3MiOiJ6bTpjaWQ6akRsWkJTamZTZXVqM09zejBSZ2VSZyIsImdubyI6MCwidHlwZSI6MCwidGlkIjowLCJhdWQiOiJodHRwczovL29hdXRoLnpvb20udXMiLCJ1aWQiOiJjazN3dEhhVlE4Q19WQVQ2aVJoWkJ3IiwibmJmIjoxNjA2Mzg2OTczLCJleHAiOjE2MDYzOTA1NzMsImlhdCI6MTYwNjM4Njk3MywiYWlkIjoiNVJ2LU5rbmxTVFdRVmpJOGZlcVpzQSIsImp0aSI6Ijk2NDBhN2IzLWRmMjItNDgyOS05MTYxLThhNTY5ZjY0YTc0MCJ9.CMlfnK5H2_nFaYlvsjj9zBLo7oszJu11bWoi7ZZbM1yzvlgOhUFjpPcJuw6ENaAXCg7WmqTx8O7TGVpjgqy3iw";
