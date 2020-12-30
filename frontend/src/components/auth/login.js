@@ -42,6 +42,7 @@ class login extends Component {
       this.setState({ tokendata: tokens });
       this.checkLoginStatus();
     } else {
+      //message: "Invalid access token."
       this.authenticate();
     }
   }
