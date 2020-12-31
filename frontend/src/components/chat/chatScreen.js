@@ -168,6 +168,8 @@ class chatScreen extends Component {
         };
     return (
       <div>
+        {this.state.userChatData.contacts?(
+          <div>
         <NavBar signedInUser={this.state.user} />
         <Container>
           <Row>
@@ -195,6 +197,8 @@ class chatScreen extends Component {
         />
         <LoadingModal show={this.state.loading} />
         <NotificationContainer />
+        </div>
+        ):(<div></div>)}
       </div>
     );
   }

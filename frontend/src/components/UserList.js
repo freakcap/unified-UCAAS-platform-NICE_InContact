@@ -37,7 +37,7 @@ export default class UserList extends Component {
   }
   render() {
     let users = this.props.userData.contacts;
-    console.log("LIST",users);
+    console.log("LIST",this.props.userData);
     return (
       <div>
         <FormGroup>
