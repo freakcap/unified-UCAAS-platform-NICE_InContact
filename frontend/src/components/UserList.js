@@ -32,11 +32,12 @@ export default class UserList extends Component {
     return !this.state.searchQuery
       ? this.props.userData
       : this.props.userData.filter(user =>
-          user.name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+          user.contacts.first_name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
         );
   }
   render() {
-    let users = this.getFilteredUserList();
+    let users = this.props.userData.contacts;
+    console.log("LIST",this.props.userData);
     return (
       <div>
         <FormGroup>
@@ -46,7 +47,7 @@ export default class UserList extends Component {
             onInput={this.searchInput.bind(this)}
           />
         </FormGroup>
-        {users.length ? (
+       {users.length ? (
           <ChatList
             className={!this.props.showSignInList ? "chat-list" : "user-list"}
             dataSource={users.map((f, i) => {
@@ -64,9 +65,9 @@ export default class UserList extends Component {
                   lastMessage.text;
               }
               return {
-                avatar: require(`../static/images/avatar/${f.id}.jpg`),
-                alt: f.name,
-                title: f.name,
+                avatar: require(`../static/images/avatar/1.jpg`),
+                alt: f.first_name,
+                title: f.first_name,
                 subtitle: subtitle,
                 date: date,
                 unread: f.unread,

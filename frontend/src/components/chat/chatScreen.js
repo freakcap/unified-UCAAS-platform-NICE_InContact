@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import NavBar from "../NavBar";
-import Container from 'react-bootstrap/Container'
+import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import UserList from "../UserList";
@@ -20,81 +20,97 @@ import axios from "axios";
 class chatScreen extends Component {
   state = {
     signInModalShow: false,
-    users: [
-      {
-        id: 1,
-        name: "Niraj",
-      },
-      {
-        id: 2,
-        name: "Pranav",
-      },
-      {
-        id: 3,
-        name: "Yash",
-      },
-      {
-        id: 4,
-        name: "Mark",
-      },
-      {
-        id: 5,
-        name: "Bill",
-      },
-      {
-        id: 6,
-        name: "Sam",
-      },
-      {
-        id: 7,
-        name: "Rohit",
-      },
-    ], // Avaiable users for signing-in
+    // users: [
+    //   {
+    //     id: 1,
+    //     name: "Niraj",
+    //   },
+    //   {
+    //     id: 2,
+    //     name: "Pranav",
+    //   },
+    //   {
+    //     id: 3,
+    //     name: "Yash",
+    //   },
+    //   {
+    //     id: 4,
+    //     name: "Mark",
+    //   },
+    //   {
+    //     id: 5,
+    //     name: "Bill",
+    //   },
+    //   {
+    //     id: 6,
+    //     name: "Sam",
+    //   },
+    //   {
+    //     id: 7,
+    //     name: "Rohit",
+    //   },
+    // ], // Avaiable users for signing-in
     userChatData: [
       {
         id: 2,
         name: "Pranav",
-        messages:[],
+        messages: [],
       },
       {
         id: 3,
         name: "Yash",
-        messages:[],
+        messages: [],
       },
       {
         id: 4,
         name: "Mark",
-        messages:[],
+        messages: [],
       },
       {
         id: 5,
         name: "Bill",
-        messages:[],
+        messages: [],
       },
       {
         id: 6,
         name: "Sam",
-        messages:[],
+        messages: [],
       },
       {
         id: 7,
         name: "Rohit",
-        messages:[],
+        messages: [],
       },
     ], // this contains users from which signed-in user can chat and its message data.
-    user: {
-      id: 1,
-      name: "Niraj",
-    }, // Signed-In User
+    user: {}, // Signed-In User
+    tokenData: {},
     selectedUserIndex: null,
     showChatBox: false, // For small devices only
     showChatList: true, // For small devices only
     error: false,
     errorMessage: "",
   };
-  // componentDidMount() {
-  //   fetchUsers().then((users) => this.setState({ users }));
-  // }
+  fetchContacts() {
+    console.log(this.state.tokenData);
+    axios
+      .get("http://localhost:3000" + "/zoom/contacts", {
+        headers: {
+          atoken: this.props.location.aboutProps.tokendata.data.access_token,
+        },
+      })
+      .then((result) => {
+        this.setState({ userChatData: result.data });
+        console.log(result.data);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+  componentDidMount() {
+    console.log(this.props.location.aboutProps.tokendata);
+    this.setState({ user: this.props.location.aboutProps.userdata });
+    this.fetchContacts();
+  }
   onChatClicked(e) {
     this.toggleViews();
     let users = this.state.userChatData;
@@ -111,45 +127,49 @@ class chatScreen extends Component {
     let userChatData = this.state.userChatData;
     let message = {
       to: this.state.userChatData[this.state.selectedUserIndex].id,
-        type: "text",
-        text: text,
-        date: +new Date(),
-        className: "message",
-        position: "right",
+      type: "text",
+      text: text,
+      date: +new Date(),
+      className: "message",
+      position: "right",
       from: this.state.user.id,
     };
     console.log(userChatData);
-    userChatData[this.state.userChatData[this.state.selectedUserIndex].id-2].messages.push(message);
+    userChatData[
+      this.state.userChatData[this.state.selectedUserIndex].id - 2
+    ].messages.push(message);
     this.setState({ userChatData });
   }
   toggleViews() {
-
     this.setState({
       showChatBox: !this.state.showChatBox,
       showChatList: !this.state.showChatList,
     });
   }
-  render() {let chatBoxProps = this.state.showChatBox
-    ? {
-        xs: 12,
-        sm: 12
-      }
-    : {
-        xsHidden: true,
-        smHidden: true
-      };
+  render() {
+    let chatBoxProps = this.state.showChatBox
+      ? {
+          xs: 12,
+          sm: 12,
+        }
+      : {
+          xsHidden: true,
+          smHidden: true,
+        };
 
-  let chatListProps = this.state.showChatList
-    ? {
-        xs: 12,
-        sm: 12
-      }
-    : {
-        xsHidden: true,
-        smHidden: true
-      };
+    let chatListProps = this.state.showChatList
+      ? {
+          xs: 12,
+          sm: 12,
+        }
+      : {
+          xsHidden: true,
+          smHidden: true,
+        };
     return (
       <div>
+        {this.state.userChatData.contacts?(
+          <div>
         <NavBar signedInUser={this.state.user} />
         <Container>
           <Row>
@@ -177,6 +197,8 @@ class chatScreen extends Component {
         />
         <LoadingModal show={this.state.loading} />
         <NotificationContainer />
+        </div>
+        ):(<div></div>)}
       </div>
     );
   }
