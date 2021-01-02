@@ -28,7 +28,7 @@ router.get('/user', (req, res, next) => {
         url: 'https://api.zoom.us/v2/users/me',
         headers: {authorization:"Bearer "+ req.headers.atoken}
       };
-      console.log(authcode);
+      console.log(req.headers.atoken);
         request(options, (error, response, body) => {
             if (error) {
                 console.log('API Response Error: ', error)

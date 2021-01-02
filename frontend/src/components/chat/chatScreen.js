@@ -113,8 +113,9 @@ class chatScreen extends Component {
   }
   onChatClicked(e) {
     this.toggleViews();
-    let users = this.state.userChatData;
+    let users = this.state.userChatData.contacts;
     for (let index = 0; index < users.length; index++) {
+      console.log(users[index]);
       if (users[index].id === e.user.id) {
         // users[index].unread = 0;
         this.setState({ selectedUserIndex: index, userChatData: users });

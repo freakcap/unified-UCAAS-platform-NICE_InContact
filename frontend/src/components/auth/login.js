@@ -3,7 +3,7 @@ import axios from "axios";
 
 class login extends Component {
   state = {
-    tokendata: {},
+    tokendata : null,
     userdata: {},
   };
 
@@ -17,30 +17,33 @@ class login extends Component {
     window.location = url;
   }
 
-  checkLoginStatus = () => {
+  checkLoginStatus = (token) => {
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
-          atoken: this.state.tokendata,
+          atoken: token,
         },
       })
       .then((result) => {
         this.setState({ userdata: result.data });
-        console.log(result.data);
       })
       .catch((error) => {
         console.log(error);
-        this.authenticate();
+        // Temporary hack
+        localStorage.clear();
+        window.location.reload();
       });
   };
 
   componentDidMount() {
-    const tokens = localStorage.getItem('AccessToken');
-    console.log("Tokens", tokens);
-    console.log("LOCAL_Login",localStorage.getItem('AccessToken'));
+    var tokens = localStorage.getItem("AccessToken");
+    // console.log("Tokens", tokens);
+    // console.log("LOCAL_Login",localStorage.getItem("AccessToken"));
     if (tokens != null) {
       this.setState({ tokendata: tokens });
-      this.checkLoginStatus();
+      // console.log(tokens);
+      // console.log(this.state.tokendata);
+      this.checkLoginStatus(tokens);
     } else {
       //message: "Invalid access token."
       this.authenticate();
