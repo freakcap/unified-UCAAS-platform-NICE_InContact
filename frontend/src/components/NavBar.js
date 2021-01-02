@@ -9,6 +9,7 @@ import Navbar from "react-bootstrap/Navbar";
 class NavBar extends Component {
   state = {};
   render() {
+    console.log("NavBar",this.props.signedInUser.first_name);
     return (
       <>
       <Navbar inverse>
@@ -17,7 +18,7 @@ class NavBar extends Component {
         <Navbar.Collapse>
           <Navbar.Text pullRight>
             Signed in as:&nbsp;
-            <span className="signed-in-user">{(this.props.signedInUser || {}).name}</span>
+            <span className="signed-in-user">{(this.props.signedInUser || {}).first_name}</span>
           </Navbar.Text>
         </Navbar.Collapse>
       </Navbar>
