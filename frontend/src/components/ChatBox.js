@@ -8,8 +8,9 @@ import Jumbotron from "react-bootstrap/Jumbotron";
 import {
   MessageList,
   Navbar as NavbarComponent,
-  Avatar
+  Avatar,
 } from "react-chat-elements";
+import axios from "axios";
 
 /**
  *
@@ -21,12 +22,15 @@ import {
 
 export default class ChatBox extends Component {
   state = {
-    messageText: ""
+    messageText: "",
+    messages: {},
+    tokenData: {},
   };
   /**
    *
    * Sends a message only if it is not falsy.
    */
+
   onSendClicked() {
     if (!this.state.messageText) {
       return;
@@ -50,7 +54,7 @@ export default class ChatBox extends Component {
   }
 
   render() {
-    console.log(this.props.targetUser)
+    // console.log("Target",this.props.targetUser);
     return (
       <div>
         {this.props.targetUser ? (
@@ -59,14 +63,14 @@ export default class ChatBox extends Component {
               left={
                 <div>
                   <Avatar
-                    src={`../static/images/avatar/${
-                      this.props.targetUser.id
-                    }.jpg`}
-                    alt={"logo"}
+                    src={`../static/images/avatar/${this.props.targetUser.id}.jpg`}
+                    alt={"image"}
                     size="large"
                     type="circle flexible"
                   />
-                  <p className="navBarText">{this.props.targetUser.name}</p>
+                  <p className="navBarText">
+                    {this.props.targetUser.user.first_name}
+                  </p>
                 </div>
               }
             />

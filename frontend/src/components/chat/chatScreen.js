@@ -20,68 +20,7 @@ import axios from "axios";
 class chatScreen extends Component {
   state = {
     signInModalShow: false,
-    // users: [
-    //   {
-    //     id: 1,
-    //     name: "Niraj",
-    //   },
-    //   {
-    //     id: 2,
-    //     name: "Pranav",
-    //   },
-    //   {
-    //     id: 3,
-    //     name: "Yash",
-    //   },
-    //   {
-    //     id: 4,
-    //     name: "Mark",
-    //   },
-    //   {
-    //     id: 5,
-    //     name: "Bill",
-    //   },
-    //   {
-    //     id: 6,
-    //     name: "Sam",
-    //   },
-    //   {
-    //     id: 7,
-    //     name: "Rohit",
-    //   },
-    // ], // Avaiable users for signing-in
-    userChatData: [
-      {
-        id: 2,
-        name: "Pranav",
-        messages: [],
-      },
-      {
-        id: 3,
-        name: "Yash",
-        messages: [],
-      },
-      {
-        id: 4,
-        name: "Mark",
-        messages: [],
-      },
-      {
-        id: 5,
-        name: "Bill",
-        messages: [],
-      },
-      {
-        id: 6,
-        name: "Sam",
-        messages: [],
-      },
-      {
-        id: 7,
-        name: "Rohit",
-        messages: [],
-      },
-    ], // this contains users from which signed-in user can chat and its message data.
+    userChatData: {}, // this contains users from which signed-in user can chat and its message data.
     user: {}, // Signed-In User
     tokenData: {},
     selectedUserIndex: null,
@@ -95,7 +34,7 @@ class chatScreen extends Component {
     axios
       .get("http://localhost:3000" + "/zoom/contacts", {
         headers: {
-          atoken: this.props.location.aboutProps.tokendata.data.access_token,
+          atoken: this.state.tokenData,
         },
       })
       .then((result) => {
@@ -106,27 +45,81 @@ class chatScreen extends Component {
         console.log(error);
       });
   }
+  checkLoginStatus = () => {
+    axios
+      .get("http://localhost:3000" + "/zoom/user", {
+        headers: {
+          atoken: this.state.tokenData,
+        },
+      })
+      .then((result) => {
+        if (result.data.code == 124) {
+          console.log("error");
+          localStorage.clear();
+          var url = process.env.REACT_APP_redirectURL + "/";
+          window.location = url;
+        } else {
+          this.setState({ user: result.data });
+          // this.setState({ user: this.props.location.aboutProps.userdata });
+          this.fetchContacts();
+        }
+        console.log(result.data);
+        // code: 124, message: "Invalid access token."
+      })
+      .catch((error) => {
+        console.log(error);
+        localStorage.clear();
+        var url = process.env.REACT_APP_redirectURL + "/";
+        window.location = url;
+      });
+  };
+
   componentDidMount() {
-    console.log(this.props.location.aboutProps.tokendata);
-    this.setState({ user: this.props.location.aboutProps.userdata });
-    this.fetchContacts();
+    // console.log(localStorage.getItem("AccessToken"));
+    const tokens = localStorage.getItem("AccessToken");
+    if (tokens != null) {
+      // console.log("CHAT_Login", localStorage.getItem("AccessToken"));
+      // console.log("Tokens", tokens);
+      this.setState({ tokenData: tokens }, () => {
+        this.checkLoginStatus();
+      });
+    } else {
+      localStorage.clear();
+      var url = process.env.REACT_APP_redirectURL + "/";
+      window.location = url;
+    }
+  }
+  getMessages() {
+    console.log("User",this.state.user.id)
+    axios
+      .get("http://localhost:3000" + "/zoom/messages", {
+        headers: {
+          atoken: this.state.tokenData,
+          id: this.state.user.id,
+          to: this.state.selectedUserIndex.user.email,
+        },
+      })
+      .then((result) => {
+        console.log(result);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
   onChatClicked(e) {
     this.toggleViews();
-    let users = this.state.userChatData;
-    for (let index = 0; index < users.length; index++) {
-      if (users[index].id === e.user.id) {
-        // users[index].unread = 0;
-        this.setState({ selectedUserIndex: index, userChatData: users });
-        return;
-      }
-    }
+    console.log("Selected User", e);
+    let users = this.state.userChatData.contacts;
+    this.setState({ selectedUserIndex: e }, () => {
+      this.getMessages();
+    });
+    return;
   }
   createMessage(text) {
     console.log("text", text);
     let userChatData = this.state.userChatData;
     let message = {
-      to: this.state.userChatData[this.state.selectedUserIndex].id,
+      to: this.state.selectedUserIndex.user.email,
       type: "text",
       text: text,
       date: +new Date(),
@@ -135,9 +128,9 @@ class chatScreen extends Component {
       from: this.state.user.id,
     };
     console.log(userChatData);
-    userChatData[
-      this.state.userChatData[this.state.selectedUserIndex].id - 2
-    ].messages.push(message);
+    // userChatData[
+    //   this.state.userChatData[this.state.selectedUserIndex].id - 2
+    // ].messages.push(message);
     this.setState({ userChatData });
   }
   toggleViews() {
@@ -168,37 +161,37 @@ class chatScreen extends Component {
         };
     return (
       <div>
-        {this.state.userChatData.contacts?(
+        {this.state.userChatData.contacts ? (
           <div>
-        <NavBar signedInUser={this.state.user} />
-        <Container>
-          <Row>
-            <Col {...chatListProps} md={4}>
-              <UserList
-                userData={this.state.userChatData}
-                onChatClicked={this.onChatClicked.bind(this)}
-              />
-            </Col>
-            <Col {...chatBoxProps} md={8}>
-              <ChatBox
-                signedInUser={this.state.user}
-                onSendClicked={this.createMessage.bind(this)}
-                onBackPressed={this.toggleViews.bind(this)}
-                targetUser={
-                  this.state.userChatData[this.state.selectedUserIndex]
-                }
-              />
-            </Col>
-          </Row>
-        </Container>
-        <ErrorModal
-          show={this.state.error}
-          errorMessage={this.state.errorMessage}
-        />
-        <LoadingModal show={this.state.loading} />
-        <NotificationContainer />
-        </div>
-        ):(<div></div>)}
+            <NavBar signedInUser={this.state.user} />
+            <Container>
+              <Row>
+                <Col {...chatListProps} md={4}>
+                  <UserList
+                    userData={this.state.userChatData}
+                    onChatClicked={this.onChatClicked.bind(this)}
+                  />
+                </Col>
+                <Col {...chatBoxProps} md={8}>
+                  <ChatBox
+                    signedInUser={this.state.user}
+                    onSendClicked={this.createMessage.bind(this)}
+                    onBackPressed={this.toggleViews.bind(this)}
+                    targetUser={this.state.selectedUserIndex}
+                  />
+                </Col>
+              </Row>
+            </Container>
+            <ErrorModal
+              show={this.state.error}
+              errorMessage={this.state.errorMessage}
+            />
+            <LoadingModal show={this.state.loading} />
+            <NotificationContainer />
+          </div>
+        ) : (
+          <div></div>
+        )}
       </div>
     );
   }

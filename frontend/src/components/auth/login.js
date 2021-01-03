@@ -3,7 +3,7 @@ import axios from "axios";
 
 class login extends Component {
   state = {
-    tokendata: {},
+    tokendata: "",
     userdata: {},
   };
 
@@ -18,6 +18,7 @@ class login extends Component {
   }
 
   checkLoginStatus = () => {
+    console.log("TOKEN STATE", this.state.tokendata);
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
@@ -25,24 +26,31 @@ class login extends Component {
         },
       })
       .then((result) => {
-        this.setState({ userdata: result.data });
+        if (result.data.code == 124) {
+          localStorage.clear();
+          this.authenticate();
+        } else {
+          this.setState({ userdata: result.data });
+        }
         console.log(result.data);
+        // code: 124, message: "Invalid access token."
       })
       .catch((error) => {
         console.log(error);
-        this.authenticate();
+        localStorage.clear();
+        window.location.reload();
       });
   };
 
   componentDidMount() {
-    const tokens = localStorage.getItem('AccessToken');
-    console.log("Tokens", tokens);
-    console.log("LOCAL_Login",localStorage.getItem('AccessToken'));
+    const tokens = localStorage.getItem("AccessToken");
     if (tokens != null) {
-      this.setState({ tokendata: tokens });
-      this.checkLoginStatus();
+      console.log("LOCAL_Login", localStorage.getItem("AccessToken"));
+      console.log("Tokens", tokens);
+      this.setState({ tokendata: tokens }, () => {
+        this.checkLoginStatus();
+      });
     } else {
-      //message: "Invalid access token."
       this.authenticate();
     }
   }
