@@ -9,6 +9,7 @@ import ErrorModal from "../ErrorModal";
 import LoadingModal from "../LoadingModal";
 import "react-chat-elements/dist/main.css";
 // import { fetchUsers } from "./requests";
+import Loader from "react-loader-spinner";
 
 import {
   NotificationContainer,
@@ -102,7 +103,7 @@ class chatScreen extends Component {
     return msg;
   }
 
-  getMessages=()=> {
+  getMessages = () => {
     axios
       .get("http://localhost:3000" + "/zoom/messages", {
         headers: {
@@ -123,12 +124,12 @@ class chatScreen extends Component {
       .catch((error) => {
         console.log(error);
       });
-  }
-  getMessagesInterval=()=> {
+  };
+  getMessagesInterval = () => {
     const interval = setInterval(() => {
       this.getMessages();
-  }, 5000);
-  }
+    }, 5000);
+  };
   onChatClicked(e) {
     this.toggleViews();
     // console.log("Selected User", e);
@@ -228,7 +229,9 @@ class chatScreen extends Component {
             <NotificationContainer />
           </div>
         ) : (
-          <div></div>
+          <div>
+            <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
+          </div>
         )}
       </div>
     );

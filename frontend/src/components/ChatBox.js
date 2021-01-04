@@ -108,7 +108,7 @@ export default class ChatBox extends Component {
         ) : (
           <div>
             <Jumbotron>
-              <h1>Hello, {(this.props.signedInUser || {}).name}!</h1>
+              <h1>Hello, {(this.props.signedInUser || {}).first_name}!</h1>
               <p>Select a contact to start a chat.</p>
             </Jumbotron>
           </div>

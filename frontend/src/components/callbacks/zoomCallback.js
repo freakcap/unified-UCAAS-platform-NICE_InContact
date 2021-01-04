@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import axios from "axios";
 import queryString from "query-string";
-import { Link } from "react-router-dom"; 
+import { Link } from "react-router-dom";
+import Loader from "react-loader-spinner";
 
 class zoomCallback extends Component {
   state = {
@@ -72,14 +73,23 @@ class zoomCallback extends Component {
                   </h2>
                 </div>
               </div>
-              <Link to={{pathname :"/chat" ,aboutProps:{userdata:this.state.userdata, tokendata : this.state.tokendata}}} className="btn btn-primary">
+              <Link
+                to={{
+                  pathname: "/chat",
+                  aboutProps: {
+                    userdata: this.state.userdata,
+                    tokendata: this.state.tokendata,
+                  },
+                }}
+                className="btn btn-primary"
+              >
                 Go to chat
               </Link>
             </div>
           </div>
         ) : (
           <div>
-            <h1>LOGIN</h1>
+            <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
           </div>
         )}
       </div>
