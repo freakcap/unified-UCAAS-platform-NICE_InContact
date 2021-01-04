@@ -37,7 +37,7 @@ export default class UserList extends Component {
   }
   render() {
     let users = this.props.userData.contacts;
-    console.log("LIST",this.props.userData);
+    // console.log("LIST",this.props.userData);
     return (
       <div>
         <FormGroup>
@@ -52,25 +52,23 @@ export default class UserList extends Component {
             className={!this.props.showSignInList ? "chat-list" : "user-list"}
             dataSource={users.map((f, i) => {
               let date = null;
-              let subtitle = "";
-              if (
-                !this.props.showSignInList &&
-                f.messages &&
-                f.messages.length
-              ) {
-                let lastMessage = f.messages[f.messages.length - 1];
-                date = new Date(lastMessage.timeStamp);
-                subtitle =
-                  (lastMessage.position === "right" ? "You: " : f.name + ": ") +
-                  lastMessage.text;
-              }
+              // if (
+              //   !this.props.showSignInList &&
+              //   f.messages &&
+              //   f.messages.length
+              // ) {
+              //   let lastMessage = f.messages[f.messages.length - 1];
+              //   date = new Date(lastMessage.timeStamp);
+              //   subtitle =
+              //     (lastMessage.position === "right" ? "You: " : f.name + ": ") +
+              //     lastMessage.text;
+              // }
               return {
                 avatar: require(`../static/images/avatar/1.jpg`),
                 alt: f.first_name,
                 title: f.first_name,
-                subtitle: subtitle,
                 date: date,
-                unread: f.unread,
+                // unread: f.unread,
                 user: f
               };
             })}

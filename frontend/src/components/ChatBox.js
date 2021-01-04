@@ -78,7 +78,7 @@ export default class ChatBox extends Component {
               className="message-list"
               lockable={true}
               toBottomHeight={"100%"}
-              dataSource={this.props.targetUser.messages}
+              dataSource={this.props.messages}
             />
             <FormGroup>
               <InputGroup>
