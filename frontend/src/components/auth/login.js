@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 class login extends Component {
   state = {
@@ -56,7 +57,8 @@ class login extends Component {
   }
   render() {
     return (
-      <div>
+      <div 
+        style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
         {this.state.userdata.first_name ? (
           <div>
             <div class="container">
@@ -69,6 +71,18 @@ class login extends Component {
                   </h2>
                 </div>
               </div>
+              <Link
+                to={{
+                  pathname: "/chat",
+                  aboutProps: {
+                    userdata: this.state.userdata,
+                    tokendata: this.state.tokendata,
+                  },
+                }}
+                className="btn btn-primary"
+              >
+                Go to chat
+              </Link>
             </div>
           </div>
         ) : (

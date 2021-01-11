@@ -60,7 +60,14 @@ class zoomCallback extends Component {
   }
   render() {
     return (
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         {this.state.userdata.first_name ? (
           <div>
             <div>
@@ -88,7 +95,14 @@ class zoomCallback extends Component {
             </div>
           </div>
         ) : (
-          <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
             <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
           </div>
         )}

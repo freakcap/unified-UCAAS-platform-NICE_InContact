@@ -70,7 +70,7 @@ router.get('/messages', (req, res, next) => {
   var options = {
       method: 'GET',
       url: 'https://api.zoom.us/v2/chat/users/'+req.headers.id+'/messages?page_size=10',
-      qs: {page_size: '10', to_contact: req.headers.to, date: req.headers.dt},
+      qs: {page_size: '30', to_contact: req.headers.to, date: req.headers.dt},
       headers: {authorization:"Bearer "+ req.headers.atoken}
     };
       request(options, (error, response, body) => {
