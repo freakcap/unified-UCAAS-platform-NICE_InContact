@@ -229,7 +229,14 @@ class chatScreen extends Component {
             <NotificationContainer />
           </div>
         ) : (
-          <div>
+          <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
             <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
           </div>
         )}
