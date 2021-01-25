@@ -128,7 +128,7 @@ class chatScreen extends Component {
   getMessagesInterval = () => {
     const interval = setInterval(() => {
       this.getMessages();
-    }, 5000);
+    }, 4000);
   };
   onChatClicked(e) {
     this.toggleViews();
