@@ -9,22 +9,22 @@ import Navbar from "react-bootstrap/Navbar";
 class NavBar extends Component {
   state = {};
   render() {
-    console.log("NavBar",this.props.signedInUser.first_name);
+    console.log("NavBar", this.props.signedInUser.first_name);
     return (
-      <>
-      <Navbar inverse>
-        <Navbar.Brand>Chat</Navbar.Brand>
-        <Navbar.Toggle />
-        <Navbar.Collapse>
-          <Navbar.Text pullRight>
-            Signed in as:&nbsp;
-            <span className="signed-in-user">{(this.props.signedInUser || {}).first_name}</span>
-          </Navbar.Text>
-        </Navbar.Collapse>
-      </Navbar>
-      </>
+        <Navbar bg="light">
+          <Navbar.Brand>
+            <h1>  CHAT</h1>
+          </Navbar.Brand>
+          <Navbar.Toggle />
+          <Navbar.Collapse className="justify-content-end">
+            <h3>
+              Signed in as:&nbsp;
+              <span>{(this.props.signedInUser || {}).first_name}</span>
+            </h3>
+          </Navbar.Collapse>
+        </Navbar>
     );
   }
 }
- 
+
 export default NavBar;
