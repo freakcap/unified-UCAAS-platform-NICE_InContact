@@ -53,15 +53,13 @@ class teamsLogin extends Component {
 
   async login() {
     try {
-      console.log("HERE-1");
-
       await this.userAgentApplication.loginPopup(
         {
           scopes: config.scopes,
           prompt: "select_account"
         });
-        console.log("HERE");
       const user = await getUserProfile(this.userAgentApplication, config.scopes);
+      console.log(user);
       this.setState({
         isAuthenticated: true,
         user: {
