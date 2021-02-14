@@ -12,12 +12,6 @@ class zoomCallback extends Component {
 
   authenticate() {
     const value = queryString.parse(this.props.location.search);
-    console.log("Yo working");
-    // console.log(
-    //   Buffer.from(
-    //     `${process.env.REACT_APP_clientID}:${process.env.REACT_APP_clientSecret}`
-    //   ).toString("base64")
-    // );
     if (value.code) {
       // replace with server URI
       axios

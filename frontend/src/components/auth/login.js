@@ -23,7 +23,7 @@ class login extends Component {
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
-          atoken: this.state.tokendata,
+          atoken: token,
         },
       })
       .then((result) => {
