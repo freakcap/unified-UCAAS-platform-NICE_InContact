@@ -31,6 +31,10 @@ router.get('/contacts', function(req, res, next) {
     let docClient = new AWS.DynamoDB.DocumentClient();
     var params = {
         TableName: tableName,
+        FilterExpression: 'attribute_exists(#fn)',
+        ExpressionAttributeNames: {
+            "#fn": "first_name",
+        },
     };
     docClient.scan(params, function(err, data) {
     if (err) {
@@ -57,7 +61,11 @@ router.get('/get/:id',function(req,res, next){
         TableName : tableName,
         Key: {
             "UserId" : req.params.id
-        }
+        },
+        Expression: 'attribute_exists(#fn)',
+        ExpressionAttributeNames: {
+            "#fn": "first_name",
+        },
     }
     docClient.get(params, function(err, data){
         if(err){
