@@ -139,7 +139,8 @@ router.post('/add',function(req, res, next){
                         console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
                     } else {
                         console.log(" Item added");
-                        res.send("item added");
+                        res.status(200);
+                        res.send("added",200);
                     }
                 });
 });
@@ -167,6 +168,5 @@ router.post('/delete',function(req, res, next){
         }
     });
 });
-
 
 module.exports = router;

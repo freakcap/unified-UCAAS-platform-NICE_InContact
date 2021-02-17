@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { ChatList } from "react-chat-elements";
 import FormControl from "react-bootstrap/FormControl";
 import FormGroup from "react-bootstrap/FormGroup";
+import Button from "react-bootstrap/Button";
 
 /**
  *
@@ -32,12 +33,17 @@ export default class UserList extends Component {
     return !this.state.searchQuery
       ? this.props.userData
       : this.props.userData.filter(user =>
-          user.contacts.first_name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+          user.first_name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
         );
   }
+
+  toggleViews(){
+    this.props.toggleUserOptionView();
+  }
+
   render() {
-    let users = this.props.userData.contacts;
-    // console.log("LIST",this.props.userData);
+    let users = this.props.userData;
+    console.log("LIST",this.props.userData);
     return (
       <div>
         <FormGroup>
@@ -47,6 +53,12 @@ export default class UserList extends Component {
             onInput={this.searchInput.bind(this)}
           />
         </FormGroup>
+        <Button
+        className="addButton"
+        onClick={this.toggleViews.bind(this)}
+        >
+          Add New User
+        </Button>
        {users.length ? (
           <ChatList
             className={!this.props.showSignInList ? "chat-list" : "user-list"}
@@ -66,7 +78,7 @@ export default class UserList extends Component {
               return {
                 avatar: require(`../static/images/avatar/1.jpg`),
                 alt: f.first_name,
-                title: f.first_name,
+                title: f.first_name + " " + f.last_name,
                 date: date,
                 // unread: f.unread,
                 user: f

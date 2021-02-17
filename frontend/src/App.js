@@ -13,7 +13,8 @@ class App extends Component {
     return (
       <Router>
       <div className="App">
-        <Route exact path="/" component={teamsLogin} />  
+        {/* <Route exact path="/" component={teamsLogin} />   */}
+        <Route exact path="/" component={auth} />
         <Route exact path="/chat" component={chat} />
         <Route exact path="/zoom_oauth_callback" component={zoomCallback} />
       </div>

@@ -5,6 +5,7 @@ import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
 import UserList from "../UserList";
 import ChatBox from "../ChatBox";
+import AddUser from "../AddUser";
 import ErrorModal from "../ErrorModal";
 import LoadingModal from "../LoadingModal";
 import "react-chat-elements/dist/main.css";
@@ -28,16 +29,29 @@ class chatScreen extends Component {
     selectedUserIndex: null,
     showChatBox: false, // For small devices only
     showChatList: true, // For small devices only
+    showUserOptions: false,
     error: false,
     errorMessage: "",
   };
   fetchContacts() {
+    // // console.log(this.state.tokenData);
+    // axios
+    //   .get("http://localhost:3000" + "/zoom/contacts", {
+    //     headers: {
+    //       atoken: this.state.tokenData,
+    //     },
+    //   })
+    //   .then((result) => {
+    //     this.setState({ userChatData: result.data });
+    //     // console.log(result.data);
+    //   })
+    //   .catch((error) => {
+    //     console.log(error);
+    //   });
+
     // console.log(this.state.tokenData);
     axios
-      .get("http://localhost:3000" + "/zoom/contacts", {
-        headers: {
-          atoken: this.state.tokenData,
-        },
+      .get("http://localhost:3000" + "/addressbook/contacts", {
       })
       .then((result) => {
         this.setState({ userChatData: result.data });
@@ -46,6 +60,7 @@ class chatScreen extends Component {
       .catch((error) => {
         console.log(error);
       });
+      console.log("CHAT", this.state.userChatData);
   }
   checkLoginStatus = () => {
     axios
@@ -77,11 +92,8 @@ class chatScreen extends Component {
   };
 
   componentDidMount() {
-    // console.log(localStorage.getItem("AccessToken"));
     const tokens = localStorage.getItem("AccessToken");
     if (tokens != null) {
-      // console.log("CHAT_Login", localStorage.getItem("AccessToken"));
-      // console.log("Tokens", tokens);
       this.setState({ tokenData: tokens }, () => {
         this.checkLoginStatus();
       });
@@ -91,6 +103,7 @@ class chatScreen extends Component {
       window.location = url;
     }
   }
+
   myMsgs(msg) {
     if (msg.sender == this.sender) {
       msg.position = "right";
@@ -109,7 +122,7 @@ class chatScreen extends Component {
         headers: {
           atoken: this.state.tokenData,
           id: this.state.user.id,
-          to: this.state.selectedUserIndex.user.email,
+          to: this.state.selectedUserIndex.user.zoom.email,
           dt: "2021-01-11",
         },
       })
@@ -130,15 +143,21 @@ class chatScreen extends Component {
       this.getMessages();
     }, 4000);
   };
+
+
   onChatClicked(e) {
     this.toggleViews();
-    // console.log("Selected User", e);
-    let users = this.state.userChatData.contacts;
+    this.setState({
+      showUserOptions : false
+    });
+    let users = this.state.userChatData.Items;
     this.setState({ selectedUserIndex: e }, () => {
+      // console.log("dbg",this.state.selectedUserIndex);
       this.getMessagesInterval();
     });
     return;
   }
+  
   sendMessage(message) {
     console.log("To", message.to);
     var data = {
@@ -167,7 +186,7 @@ class chatScreen extends Component {
       date: +new Date(),
       className: "message",
       position: "right",
-      to: this.state.selectedUserIndex.user.email,
+      to: this.state.selectedUserIndex.user.zoom.email,
     };
     this.sendMessage(message);
   }
@@ -177,6 +196,13 @@ class chatScreen extends Component {
       showChatList: !this.state.showChatList,
     });
   }
+
+  toggleUserOptionView() {
+    this.setState({
+      showUserOptions: !this.state.showUserOptions
+    });
+  }
+
   render() {
     let chatBoxProps = this.state.showChatBox
       ? {
@@ -199,25 +225,32 @@ class chatScreen extends Component {
         };
     return (
       <div>
-        {this.state.userChatData.contacts ? (
+        {this.state.userChatData.Items ? (
           <div>
             <NavBar signedInUser={this.state.user} />
             <Container>
               <Row>
                 <Col {...chatListProps} md={4}>
                   <UserList
-                    userData={this.state.userChatData}
+                    userData={this.state.userChatData.Items}
                     onChatClicked={this.onChatClicked.bind(this)}
+                    toggleUserOptionView={this.toggleUserOptionView.bind(this)}
                   />
                 </Col>
                 <Col {...chatBoxProps} md={8}>
-                  <ChatBox
-                    signedInUser={this.state.user}
-                    messages={this.state.messages}
-                    onSendClicked={this.createMessage.bind(this)}
-                    onBackPressed={this.toggleViews.bind(this)}
-                    targetUser={this.state.selectedUserIndex}
+                  { this.state.showUserOptions ? (
+                    <AddUser 
+                      onBackPressed={this.toggleUserOptionView.bind(this)}
+                    />
+                  ) : (
+                    <ChatBox
+                      signedInUser={this.state.user}
+                      messages={this.state.messages}
+                      onSendClicked={this.createMessage.bind(this)}
+                      onBackPressed={this.toggleViews.bind(this)}
+                      targetUser={this.state.selectedUserIndex}
                   />
+                  )}
                 </Col>
               </Row>
             </Container>

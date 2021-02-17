@@ -1,0 +1,40 @@
+ 
+.addUserBody{
+  display: flex;
+  font-size: large;
+  justify-content:  center;
+  align-items: center;
+  font-family: 'Times New Roman', Times, serif;
+}
+  
+.userForm{
+  height: 40%;
+  margin-top: 1em;
+  text-align: center;
+  justify-content: center;
+  flex-direction: column;
+  display: flex;
+  padding: 45px;
+  font-size: large;
+}
+
+.userInput{
+  display: flex;
+  font-size: large;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.userButton{
+  justify-content: center;
+  align-items: center;
+  margin: 2em;
+}
+
+.inputcontainer{
+  font-size: large;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}

@@ -12,18 +12,18 @@ class login extends Component {
     var url =
       "https://zoom.us/oauth/authorize?response_type=code&client_id=" +
       process.env.REACT_APP_clientID +
-      "&redirect_uri=" +
+      "&redirect_uri=" + 
       process.env.REACT_APP_redirectURL +
       "/zoom_oauth_callback";
     window.location = url;
   }
 
   checkLoginStatus = () => {
-    console.log("TOKEN STATE", this.state.tokendata);
+    console.log("TOKEN STATE ", this.state.tokendata);
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
-          atoken: token,
+          atoken: this.state.tokendata,
         },
       })
       .then((result) => {

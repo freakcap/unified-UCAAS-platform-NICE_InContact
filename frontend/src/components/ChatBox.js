@@ -69,7 +69,7 @@ export default class ChatBox extends Component {
                     type="circle flexible"
                   />
                   <p className="navBarText">
-                    {this.props.targetUser.user.first_name}
+                    {this.props.targetUser.user.first_name + " " +  this.props.targetUser.user.last_name}  
                   </p>
                 </div>
               }
