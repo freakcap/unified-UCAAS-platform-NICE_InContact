@@ -6,13 +6,15 @@ import auth from './components/auth/login';
 import chat from './components/chat/chatScreen';
 import zoomCallback from './components/callbacks/zoomCallback'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
+import teamsLogin from './components/auth/teamsLogin';
 
 class App extends Component {
   render() {
     return (
       <Router>
       <div className="App">
-        <Route exact path="/" component={auth} />  
+        {/* <Route exact path="/" component={teamsLogin} />   */}
+        <Route exact path="/" component={auth} />
         <Route exact path="/chat" component={chat} />
         <Route exact path="/zoom_oauth_callback" component={zoomCallback} />
       </div>

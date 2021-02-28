@@ -8,12 +8,14 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var zoomRouter = require('./routes/zoom');
+var dbrouter = require('./db/dbrouter.js');
 
 var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
 // view engine setup
+
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'jade');
 
@@ -25,6 +27,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/zoom', zoomRouter);
+app.use('/addressbook',dbrouter);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
