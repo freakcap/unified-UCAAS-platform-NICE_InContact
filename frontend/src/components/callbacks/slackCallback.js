@@ -2,49 +2,51 @@ import React, { Component } from "react";
 import axios from "axios";
 import queryString from "query-string";
 import { Link } from "react-router-dom"; 
+import { config } from "../config/slackConfig";
 
-class zoomCallback extends Component {
+class slackCallback extends Component {
   state = {
     tokendata: {},
     userdata: {},
   };
 
+  // .post("https://slack.com/api/oauth.v2.access" , {
+  //         headers: {
+  //           code: value.code.toString(),
+  //           client_id : config.clientId,
+  //           client_secret : config.clientSecret
+  //         },
   authenticate() {
     const value = queryString.parse(this.props.location.search);
-    console.log("Yo working");
-    // console.log(
-    //   Buffer.from(
-    //     `${process.env.REACT_APP_clientID}:${process.env.REACT_APP_clientSecret}`
-    //   ).toString("base64")
-    // );
     if (value.code) {
       // replace with server URI
       axios
-        .get("http://localhost:3000" + "/zoom/auth", {
+      .get("http://localhost:3000" + "/slack/auth", {
           headers: {
-            authData: value.code.toString(),
+            authcode: value.code.toString(),
           },
         })
         .then((res) => {
-          this.setState({ tokendata: res });
-          localStorage.setItem(
-            "ZoomAccessToken",
-            this.state.tokendata.data.access_token
-          );
-          console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
-          axios
-            .get("http://localhost:3000" + "/zoom/user", {
-              headers: {
-                atoken: this.state.tokendata.data.access_token,
-              },
-            })
-            .then((result) => {
-              this.setState({ userdata: result.data });
-              // console.log(result.data);
-            })
-            .catch((error) => {
-              console.log(error);
-            });
+            console.log(res)
+        //   this.setState({ tokendata: res });
+        //   localStorage.setItem(
+        //     "SlackAccessToken",
+        //     this.state.tokendata.data.access_token
+        //   );
+        //   console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
+        //   axios
+        //     .get("http://localhost:3000" + "/zoom/user", {
+        //       headers: {
+        //         atoken: this.state.tokendata.data.access_token,
+        //       },
+        //     })
+        //     .then((result) => {
+        //       this.setState({ userdata: result.data });
+        //       // console.log(result.data);
+        //     })
+        //     .catch((error) => {
+        //       console.log(error);
+        //     });
         })
         .catch((error) => {
           console.log(error);
@@ -87,4 +89,4 @@ class zoomCallback extends Component {
   }
 }
 
-export default zoomCallback;
+export default slackCallback;

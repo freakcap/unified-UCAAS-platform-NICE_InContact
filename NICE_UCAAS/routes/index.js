@@ -4,7 +4,7 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.redirect('/zoom', 307);
+  res.redirect('/slack', 307);
   // res.send(res.body);
 });
 
@@ -17,6 +17,9 @@ router.post('/sendmessage',function(req, res, next){
   }
   else if(req.body.platform == "teams"){
     res.redirect('/teams',307);
+  }
+  else if(req.body.platform == "slack"){
+    res.redirect('/slack',307);
   }
   else{
     res.sendStatus(404);
