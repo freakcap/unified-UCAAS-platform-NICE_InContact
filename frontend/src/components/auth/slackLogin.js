@@ -54,15 +54,14 @@ class slackLogin extends Component {
   render() {
     return (
       <div>
-        {this.state.userdata.first_name ? (
+        {this.state.userdata.real_name ? (
           <div>
             <div class="container">
               <div>
                 <div>
                   <h1>Hello</h1>
                   <h2>
-                    {this.state.userdata.first_name.toString()}{" "}
-                    {this.state.userdata.last_name.toString()}
+                    {this.state.userdata.real_name.toString()}
                   </h2>
                 </div>
               </div>
