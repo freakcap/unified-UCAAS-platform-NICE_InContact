@@ -24,7 +24,8 @@ class chatScreen extends Component {
     signInModalShow: false,
     userChatData: {}, // this contains users from which signed-in user can chat and its message data.
     user: {}, // Signed-In User
-    tokenData: {},
+    zoomtokenData: {},
+    slacktokenData : {},
     messages: [],
     selectedUserIndex: null,
     showChatBox: false, // For small devices only
@@ -34,11 +35,11 @@ class chatScreen extends Component {
     errorMessage: "",
   };
   fetchContacts() {
-    // // console.log(this.state.tokenData);
+    // // console.log(this.state.zoomtokenData);
     // axios
     //   .get("http://localhost:3000" + "/zoom/contacts", {
     //     headers: {
-    //       atoken: this.state.tokenData,
+    //       atoken: this.state.zoomtokenData,
     //     },
     //   })
     //   .then((result) => {
@@ -49,7 +50,7 @@ class chatScreen extends Component {
     //     console.log(error);
     //   });
 
-    // console.log(this.state.tokenData);
+    // console.log(this.state.zoomtokenData);
     axios
       .get("http://localhost:3000" + "/addressbook/contacts", {
       })
@@ -62,11 +63,41 @@ class chatScreen extends Component {
       });
       console.log("CHAT", this.state.userChatData);
   }
-  checkLoginStatus = () => {
+  checkZoomLoginStatus = () => {
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
-          atoken: this.state.tokenData,
+          atoken: this.state.zoomtokenData,
+        },
+      })
+      .then((result) => {
+        if (result.data.code == 124) {
+          console.log("error");
+          localStorage.clear();
+          var url = process.env.REACT_APP_redirectURL + "/";
+          window.location = url;
+        } else {
+          this.setState({ user: result.data });
+          // this.setState({ user: this.props.location.aboutProps.userdata });
+          this.fetchContacts();
+        }
+        console.log(result.data);
+        // code: 124, message: "Invalid access token."
+      })
+      .catch((error) => {
+        console.log(error);
+        localStorage.clear();
+        var url = process.env.REACT_APP_redirectURL + "/";
+        window.location = url;
+      });
+  };
+
+
+  checkSlackLoginStatus = () => {
+    axios
+      .get("http://localhost:3000" + "/slack/user", {
+        headers: {
+          atoken: this.state.zoomtokenData,
         },
       })
       .then((result) => {
@@ -92,10 +123,12 @@ class chatScreen extends Component {
   };
 
   componentDidMount() {
-    const tokens = localStorage.getItem("AccessToken");
-    if (tokens != null) {
-      this.setState({ tokenData: tokens }, () => {
-        this.checkLoginStatus();
+    const zoomTokens = localStorage.getItem("ZoomAccessToken");
+    const slackTokens = localStorage.getItem("SlackAccessToken");
+    if (zoomTokens != null && slackTokens !=null) {
+      this.setState({ zoomtokenData: zoomTokens,  }, () => {
+        this.checkZoomLoginStatus();
+        this.checkSlackLoginStatus();
       });
     } else {
       localStorage.clear();
@@ -120,7 +153,7 @@ class chatScreen extends Component {
     axios
       .get("http://localhost:3000" + "/zoom/messages", {
         headers: {
-          atoken: this.state.tokenData,
+          atoken: this.state.zoomtokenData,
           id: this.state.user.id,
           to: this.state.selectedUserIndex.user.zoom.email,
           dt: "2021-01-11",
@@ -167,7 +200,7 @@ class chatScreen extends Component {
     axios
       .post("http://localhost:3000" + "/zoom/sendmessage", data, {
         headers: {
-          atoken: this.state.tokenData,
+          atoken: this.state.zoomtokenData,
           id: this.state.user.id,
         },
       })

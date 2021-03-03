@@ -12,13 +12,6 @@ import {
 } from "react-chat-elements";
 import axios from "axios";
 
-/**
- *
- * ChatBox Component
- *
- * displays all the messages from chat history.
- * renders message text box for input.
- */
 
 export default class ChatBox extends Component {
   state = {
@@ -26,10 +19,6 @@ export default class ChatBox extends Component {
     messages: {},
     tokenData: {},
   };
-  /**
-   *
-   * Sends a message only if it is not falsy.
-   */
 
   onSendClicked() {
     if (!this.state.messageText) {

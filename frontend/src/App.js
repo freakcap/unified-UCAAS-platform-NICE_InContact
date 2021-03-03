@@ -7,6 +7,8 @@ import chat from './components/chat/chatScreen';
 import zoomCallback from './components/callbacks/zoomCallback'
 import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom';
 import teamsLogin from './components/auth/teamsLogin';
+import slackLogin from './components/auth/slackLogin';
+import slackCallback from "./components/callbacks/slackCallback";
 
 class App extends Component {
   render() {

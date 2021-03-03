@@ -23,10 +23,10 @@ class zoomCallback extends Component {
         .then((res) => {
           this.setState({ tokendata: res });
           localStorage.setItem(
-            "AccessToken",
+            "ZoomAccessToken",
             this.state.tokendata.data.access_token
           );
-          console.log("LOCAL_Callback", localStorage.getItem("AccessToken"));
+          console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
           axios
             .get("http://localhost:3000" + "/zoom/user", {
               headers: {

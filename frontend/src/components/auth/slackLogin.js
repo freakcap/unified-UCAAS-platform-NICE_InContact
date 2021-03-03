@@ -18,34 +18,37 @@ class slackLogin extends Component {
       window.location = url;
   }
 
-  // checkLoginStatus = () => {
-  //   axios
-  //     .get("http://localhost:3000" + "/zoom/user", {
-  //       headers: {
-  //         atoken: this.state.tokendata,
-  //       },
-  //     })
-  //     .then((result) => {
-  //       this.setState({ userdata: result.data });
-  //       console.log(result.data);
-  //     })
-  //     .catch((error) => {
-  //       console.log(error);
-  //       this.authenticate();
-  //     });
-  // };
+  checkLoginStatus = () => {
+    const userid = localStorage.getItem('SlackUserID');
+
+    axios
+      .get("http://localhost:3000" + "/slack/me", {
+        headers: {
+          atoken: this.state.tokendata,
+          uid : userid,
+        },
+      })
+      .then((result) => {
+        this.setState({ userdata: result.data.user });
+        console.log(result.data.user);
+      })
+      .catch((error) => {
+        console.log(error);
+        this.authenticate();
+      });
+  };
 
   componentDidMount() {
-    // const tokens = localStorage.getItem('ZoomAccessToken');
+    const tokens = localStorage.getItem('SlackAccessToken');
     // console.log("Tokens", tokens);
     // console.log("LOCAL_Login",localStorage.getItem('ZoomAccessToken'));
-    // if (tokens != null) {
-    //   this.setState({ tokendata: tokens });
-    //   this.checkLoginStatus();
-    // } else {
-    //   //message: "Invalid access token."
-    //   this.authenticate();
-    // }
+    if (tokens != null) {
+      this.setState({ tokendata: tokens });
+      this.checkLoginStatus();
+    } else {
+      //message: "Invalid access token."
+      this.authenticate();
+    }
     this.authenticate();
   }
   render() {

@@ -10,12 +10,6 @@ class slackCallback extends Component {
     userdata: {},
   };
 
-  // .post("https://slack.com/api/oauth.v2.access" , {
-  //         headers: {
-  //           code: value.code.toString(),
-  //           client_id : config.clientId,
-  //           client_secret : config.clientSecret
-  //         },
   authenticate() {
     const value = queryString.parse(this.props.location.search);
     if (value.code) {
@@ -27,26 +21,32 @@ class slackCallback extends Component {
           },
         })
         .then((res) => {
-            console.log(res)
-        //   this.setState({ tokendata: res });
-        //   localStorage.setItem(
-        //     "SlackAccessToken",
-        //     this.state.tokendata.data.access_token
-        //   );
-        //   console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
-        //   axios
-        //     .get("http://localhost:3000" + "/zoom/user", {
-        //       headers: {
-        //         atoken: this.state.tokendata.data.access_token,
-        //       },
-        //     })
-        //     .then((result) => {
-        //       this.setState({ userdata: result.data });
-        //       // console.log(result.data);
-        //     })
-        //     .catch((error) => {
-        //       console.log(error);
-        //     });
+          console.log(res)
+          this.setState({ tokendata: res });
+          localStorage.setItem(
+            "SlackAccessToken",
+            this.state.tokendata.data.access_token
+          );
+          localStorage.setItem(
+            "SlackUserID",
+            this.state.tokendata.data.user_id
+          );
+          console.log(this.state.tokendata.data.user_id)
+          //console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
+          axios
+            .get("http://localhost:3000" + "/slack/me", {
+              headers: {
+                atoken: this.state.tokendata.data.access_token,
+                uid : this.state.tokendata.data.user_id,
+              },
+            })
+            .then((result) => {
+              this.setState({ userdata: result.data.user });
+              console.log(result.data.user);
+            })
+            .catch((error) => {
+              console.log(error);
+            });
         })
         .catch((error) => {
           console.log(error);
@@ -62,15 +62,14 @@ class slackCallback extends Component {
   render() {
     return (
       <div>
-        {this.state.userdata.first_name ? (
+        {this.state.userdata.real_name ? (
           <div>
             <div>
               <div>
                 <div>
                   <h1>Hello</h1>
                   <h2>
-                    {this.state.userdata.first_name.toString()}{" "}
-                    {this.state.userdata.last_name.toString()}
+                    {this.state.userdata.real_name.toString()}{" "}
                   </h2>
                 </div>
               </div>
