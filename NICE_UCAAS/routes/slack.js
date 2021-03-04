@@ -86,12 +86,12 @@ router.get("/openconversation", (req, res, next) => {
 
 router.get("/messages", (req, res, next) => {
   //Enter Access Token
-  console.log(req.headers.dt);
+  // console.log(req.headers.dt);
   var options = {
     method: "GET",
     url:
       "https://slack.com/api/conversations.history?channel=" +
-      req.headers.channelID,
+      req.headers.cid,
     headers: { authorization: "Bearer " + req.headers.atoken },
   };
   request(options, (error, response, body) => {

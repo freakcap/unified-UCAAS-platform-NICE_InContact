@@ -73,7 +73,7 @@ class slackCallback extends Component {
                   </h2>
                 </div>
               </div>
-              <Link to={{pathname :"/chat" ,aboutProps:{userdata:this.state.userdata, tokendata : this.state.tokendata}}} className="btn btn-primary">
+              <Link to={{pathname :"/chat" ,aboutProps:{slackuserdata:this.state.userdata, slacktokendata : this.state.tokendata}}} className="btn btn-primary">
                 Go to chat
               </Link>
             </div>

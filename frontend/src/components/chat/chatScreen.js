@@ -24,6 +24,7 @@ class chatScreen extends Component {
     signInModalShow: false,
     userChatData: {}, // this contains users from which signed-in user can chat and its message data.
     user: {}, // Signed-In User
+    slackuser:{},
     zoomtokenData: {},
     slacktokenData : {},
     messages: [],
@@ -33,6 +34,7 @@ class chatScreen extends Component {
     showUserOptions: false,
     error: false,
     errorMessage: "",
+    platform :"zoom",
   };
   fetchContacts() {
     // // console.log(this.state.zoomtokenData);
@@ -94,20 +96,22 @@ class chatScreen extends Component {
 
 
   checkSlackLoginStatus = () => {
+    usrid = localStorage.getItem("SlackUserID");
     axios
-      .get("http://localhost:3000" + "/slack/user", {
+      .get("http://localhost:3000" + "/slack/me", {
         headers: {
           atoken: this.state.zoomtokenData,
+          uid : usrid
         },
       })
       .then((result) => {
-        if (result.data.code == 124) {
+        if (result.data.ok == "false") {
           console.log("error");
           localStorage.clear();
           var url = process.env.REACT_APP_redirectURL + "/";
           window.location = url;
         } else {
-          this.setState({ user: result.data });
+          this.setState({ slackuser: result.data });
           // this.setState({ user: this.props.location.aboutProps.userdata });
           this.fetchContacts();
         }
@@ -126,7 +130,7 @@ class chatScreen extends Component {
     const zoomTokens = localStorage.getItem("ZoomAccessToken");
     const slackTokens = localStorage.getItem("SlackAccessToken");
     if (zoomTokens != null && slackTokens !=null) {
-      this.setState({ zoomtokenData: zoomTokens,  }, () => {
+      this.setState({ zoomtokenData: zoomTokens, slacktokenData:slackTokens }, () => {
         this.checkZoomLoginStatus();
         this.checkSlackLoginStatus();
       });
@@ -149,7 +153,7 @@ class chatScreen extends Component {
     return msg;
   }
 
-  getMessages = () => {
+  getMessagesZoom = () => {
     axios
       .get("http://localhost:3000" + "/zoom/messages", {
         headers: {
@@ -171,9 +175,34 @@ class chatScreen extends Component {
         console.log(error);
       });
   };
-  getMessagesInterval = () => {
+  getMessagesSlack = () => {
+    axios
+      .get("http://localhost:3000" + "/slack/messages", {
+        headers: {
+          atoken: this.state.slacktokenData,
+          // cid: , //channel ID
+        },
+      })
+      .then((result) => {
+        // var sender = this.state.user.email;
+        // var msgs = result.data.messages.map(this.myMsgs, {
+        //   sender: sender,
+        // });
+        // msgs = msgs.reverse();
+        // this.setState({ messages: msgs });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  };
+  getMessagesIntervalZoom = () => {
     const interval = setInterval(() => {
-      this.getMessages();
+      this.getMessagesZoom();
+    }, 4000);
+  };
+  getMessagesIntervalSlack = () => {
+    const interval = setInterval(() => {
+      this.getMessagesSlack();
     }, 4000);
   };
 
@@ -186,7 +215,9 @@ class chatScreen extends Component {
     let users = this.state.userChatData.Items;
     this.setState({ selectedUserIndex: e }, () => {
       // console.log("dbg",this.state.selectedUserIndex);
-      this.getMessagesInterval();
+      // this.getMessagesIntervalZoom();
+      this.getChannelId();//Pending
+      this.getMessagesIntervalSlack();
     });
     return;
   }
@@ -206,7 +237,7 @@ class chatScreen extends Component {
       })
       .then((result) => {
         console.log("Send", result);
-        this.getMessages();
+        this.getMessagesZoom();
       })
       .catch((error) => {
         console.log(error);

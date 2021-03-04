@@ -60,6 +60,7 @@ export default class ChatBox extends Component {
                   <p className="navBarText">
                     {this.props.targetUser.user.first_name + " " +  this.props.targetUser.user.last_name}  
                   </p>
+                <Button>Slack/Zoom</Button>
                 </div>
               }
             />
