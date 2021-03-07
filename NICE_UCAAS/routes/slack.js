@@ -13,7 +13,7 @@ router.get("/auth", (req, res, next) => {
      method: "POST",
      url: "https://slack.com/api/oauth.access?code=" + req.headers.authcode + "&client_id=" + process.env.slackClientID + "&client_secret=" +  process.env.slackClientSecret,
    };
-   //   console.log(authcode);
+     console.log(authcode);
    request(options, (error, response, body) => {
      if (error) {
        console.log("API Response Error: ", error);
@@ -70,14 +70,14 @@ router.get("/openconversation", (req, res, next) => {
       "content-type": "application/json",
       authorization: "Bearer " + req.headers.atoken,
     },
-    body: { users: req.body.userid },
+    body: { users: req.headers.userid },
     json: true,
   };
   request(options, (error, response, body) => {
     if (error) {
       console.log("API Response Error: ", error);
     } else {
-      body = JSON.parse(body);
+      // body = JSON.parse(body);
       console.log("API call ", body);
       res.send(body);
     }
@@ -106,30 +106,6 @@ router.get("/messages", (req, res, next) => {
 });
 
 router.post("/sendmessage", (req, res, next) => {
-  //Enter Access Token
-  console.log(req.body.message);
-  console.log("To", req.body.to);
-  var options = {
-    method: "POST",
-    url: "https://api.zoom.us/v2/chat/users/" + req.headers.id + "/messages", //Enter UserID
-    headers: {
-      "content-type": "application/json",
-      authorization: "Bearer " + req.headers.atoken,
-    },
-    body: { message: req.body.message, to_contact: req.body.to },
-    json: true,
-  };
-  request(options, (error, response, body) => {
-    if (error) {
-      console.log("API Response Error: ", error);
-    } else {
-      console.log("body: ", body);
-      res.send(body);
-    }
-  });
-});
-
-router.post("/sendmessage", (req, res, next) => {
   var options = {
     method: "POST",
     url: "https://slack.com/api/chat.postMessage",
@@ -137,7 +113,7 @@ router.post("/sendmessage", (req, res, next) => {
       "content-type": "application/json",
       authorization: "Bearer " + req.headers.atoken,
     },
-    body: { text: req.body.message, channel: req.body.to_channel },
+    body: { text: req.body.message, channel: req.body.to, as_user : "true" },
     json: true,
   };
   request(options, (error, response, body) => {

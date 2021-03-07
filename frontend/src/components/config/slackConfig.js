@@ -1,6 +1,6 @@
 
 export const config = {
-    clientId: '1788828310994.1785891210678',
-    redirectUri: 'https://cc859a63f520.ngrok.io',
+    clientId: '1788828310994.1795004363076',
+    redirectUri: 'https://953e88b199d3.ngrok.io',
     scopes: 'users:read'
 };

@@ -16,7 +16,8 @@ class App extends Component {
       <Router>
       <div className="App">
         {/* <Route exact path="/" component={teamsLogin} />   */}
-        <Route exact path="/" component={slackLogin} />  
+        <Route exact path="/slackAuth" component={slackLogin} />
+        <Route exact path="/zoomAuth" component={auth} />  
         <Route exact path="/chat" component={chat} />
         <Route exact path="/zoom_oauth_callback" component={zoomCallback} />
         <Route exact path="/slack_oauth_callback" component={slackCallback} />

@@ -12,6 +12,7 @@ class slackCallback extends Component {
 
   authenticate() {
     const value = queryString.parse(this.props.location.search);
+    console.log(value.code);
     if (value.code) {
       // replace with server URI
       axios

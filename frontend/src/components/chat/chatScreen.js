@@ -27,32 +27,20 @@ class chatScreen extends Component {
     slackuser:{},
     zoomtokenData: {},
     slacktokenData : {},
-    messages: [],
+    zoomMessages: [],
+    slackMessages: [],
     selectedUserIndex: null,
     showChatBox: false, // For small devices only
     showChatList: true, // For small devices only
     showUserOptions: false,
     error: false,
     errorMessage: "",
-    platform :"zoom",
+    platformFlag : false, // true = zoom, false = slack
+    currSlackUID : "", // User ID
+    currSlackCID : "", // Channel ID
   };
-  fetchContacts() {
-    // // console.log(this.state.zoomtokenData);
-    // axios
-    //   .get("http://localhost:3000" + "/zoom/contacts", {
-    //     headers: {
-    //       atoken: this.state.zoomtokenData,
-    //     },
-    //   })
-    //   .then((result) => {
-    //     this.setState({ userChatData: result.data });
-    //     // console.log(result.data);
-    //   })
-    //   .catch((error) => {
-    //     console.log(error);
-    //   });
 
-    // console.log(this.state.zoomtokenData);
+  fetchContacts() {
     axios
       .get("http://localhost:3000" + "/addressbook/contacts", {
       })
@@ -65,6 +53,7 @@ class chatScreen extends Component {
       });
       console.log("CHAT", this.state.userChatData);
   }
+
   checkZoomLoginStatus = () => {
     axios
       .get("http://localhost:3000" + "/zoom/user", {
@@ -89,14 +78,13 @@ class chatScreen extends Component {
       .catch((error) => {
         console.log(error);
         localStorage.clear();
-        var url = process.env.REACT_APP_redirectURL + "/";
+        var url = process.env.REACT_APP_redirectURL + "/zoomAuth";
         window.location = url;
       });
   };
 
-
   checkSlackLoginStatus = () => {
-    usrid = localStorage.getItem("SlackUserID");
+    let usrid = localStorage.getItem("SlackUserID");
     axios
       .get("http://localhost:3000" + "/slack/me", {
         headers: {
@@ -108,7 +96,7 @@ class chatScreen extends Component {
         if (result.data.ok == "false") {
           console.log("error");
           localStorage.clear();
-          var url = process.env.REACT_APP_redirectURL + "/";
+          var url = process.env.REACT_APP_redirectURL + "/slackAuth";
           window.location = url;
         } else {
           this.setState({ slackuser: result.data });
@@ -129,16 +117,40 @@ class chatScreen extends Component {
   componentDidMount() {
     const zoomTokens = localStorage.getItem("ZoomAccessToken");
     const slackTokens = localStorage.getItem("SlackAccessToken");
-    if (zoomTokens != null && slackTokens !=null) {
-      this.setState({ zoomtokenData: zoomTokens, slacktokenData:slackTokens }, () => {
-        this.checkZoomLoginStatus();
+    if(this.state.platformFlag){
+      if(zoomTokens != null){
+        this.setState({zoomtokenData : zoomTokens}, () => {
+          this.checkZoomLoginStatus();
+        });
+      }
+      else {
+        let url = process.env.REACT_APP_redirectURL + "/zoomAuth";
+        window.location = url;
+      }
+    }
+    else if(slackTokens != null){
+      this.setState({slacktokenData : slackTokens}, () => {
         this.checkSlackLoginStatus();
       });
-    } else {
+    }
+    else{
       localStorage.clear();
-      var url = process.env.REACT_APP_redirectURL + "/";
+      let url = process.env.REACT_APP_redirectURL + "/slackAuth";
       window.location = url;
     }
+    // // if (zoomTokens != null && slackTokens !=null) {
+    //   console.log(slackTokens);
+    //   if (slackTokens !=null) {
+    //   // this.setState({ zoomtokenData: zoomTokens, slacktokenData:slackTokens }, () => {
+    //     this.setState({ slacktokenData:slackTokens }, () => {
+    //     // this.checkZoomLoginStatus();
+    //     this.checkSlackLoginStatus();
+    //   });
+    // } else {
+    //   localStorage.clear();
+    //   var url = process.env.REACT_APP_redirectURL + "/";
+    //   window.location = url;
+    // }
   }
 
   myMsgs(msg) {
@@ -150,6 +162,18 @@ class chatScreen extends Component {
     msg.type = "text";
     msg.date = msg.timestamp;
     msg.text = msg.message;
+    return msg;
+  }
+
+  myMsgsSlack(msg){
+    if (msg.user == this.receiver) {
+      msg.position = "left";
+    } else {
+      msg.position = "right";
+    }
+    msg.type = "text";
+    msg.date = parseInt(msg.ts);
+    msg.text = msg.text;
     return msg;
   }
 
@@ -169,38 +193,80 @@ class chatScreen extends Component {
           sender: sender,
         });
         msgs = msgs.reverse();
-        this.setState({ messages: msgs });
+        this.setState({ zoomMessages: msgs });
       })
       .catch((error) => {
         console.log(error);
       });
   };
+
+  getSlackTargetDetails(){
+      axios
+      .get("http://localhost:3000" + "/slack/user", {
+        headers: {
+          atoken: this.state.slacktokenData,
+          mailid : this.state.selectedUserIndex.user.slack.email,
+        },
+      })
+      .then((result) => {
+        this.setState({ currSlackUID: result.data.user.id },() => {
+          console.log(this.state.currSlackUID);
+          axios
+          .get("http://localhost:3000" + "/slack/openconversation", {
+            headers: {
+              atoken: this.state.slacktokenData,
+              userid : this.state.currSlackUID,
+            },
+          })
+          .then((res) => {
+            console.log(res);
+            this.setState({currSlackCID : res.data.channel.id}, () => {});
+          })
+          .catch((error) => {
+            console.log(error);
+            // this.authenticate();
+          });  
+        });
+        // console.log(result.data.user);
+      })
+      .catch((error) => {
+        console.log(error);
+        // this.authenticate();
+      });  
+  };
+
   getMessagesSlack = () => {
     axios
       .get("http://localhost:3000" + "/slack/messages", {
         headers: {
           atoken: this.state.slacktokenData,
-          // cid: , //channel ID
+          cid: this.state.currSlackCID,
         },
       })
       .then((result) => {
-        // var sender = this.state.user.email;
-        // var msgs = result.data.messages.map(this.myMsgs, {
-        //   sender: sender,
-        // });
-        // msgs = msgs.reverse();
-        // this.setState({ messages: msgs });
+        console.log(result);
+        var receiver = this.state.currSlackUID;
+        var msgs = result.data.messages.map(this.myMsgsSlack, {
+          receiver: receiver,
+        });
+        msgs = msgs.reverse();
+        this.setState({ slackMessages: msgs });
       })
       .catch((error) => {
         console.log(error);
       });
   };
   getMessagesIntervalZoom = () => {
+    if(!this.state.platformFlag) return;
     const interval = setInterval(() => {
       this.getMessagesZoom();
     }, 4000);
   };
   getMessagesIntervalSlack = () => {
+    if(this.state.platformFlag) return;
+    var uid;
+    this.getSlackTargetDetails();
+    
     const interval = setInterval(() => {
       this.getMessagesSlack();
     }, 4000);
@@ -215,14 +281,14 @@ class chatScreen extends Component {
     let users = this.state.userChatData.Items;
     this.setState({ selectedUserIndex: e }, () => {
       // console.log("dbg",this.state.selectedUserIndex);
-      // this.getMessagesIntervalZoom();
-      this.getChannelId();//Pending
+      this.getMessagesIntervalZoom();
+      // this.getChannelId();//Pending
       this.getMessagesIntervalSlack();
     });
     return;
   }
   
-  sendMessage(message) {
+  sendZoomMessage(message) {
     console.log("To", message.to);
     var data = {
       message: message.text,
@@ -243,6 +309,28 @@ class chatScreen extends Component {
         console.log(error);
       });
   }
+
+  sendSlackMessage(message) {
+    console.log("To", message.to);
+    var data = {
+      message: message.text,
+      to: message.to,
+    };
+    axios
+      .post("http://localhost:3000" + "/slack/sendmessage", data, {
+        headers: {
+          atoken: this.state.slacktokenData,
+        },
+      })
+      .then((result) => {
+        console.log("Send", result);
+        this.getMessagesSlack();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
   createMessage(text) {
     let message = {
       type: "text",
@@ -250,10 +338,11 @@ class chatScreen extends Component {
       date: +new Date(),
       className: "message",
       position: "right",
-      to: this.state.selectedUserIndex.user.zoom.email,
+      to: this.state.platformFlag ? this.state.selectedUserIndex.user.zoom.email : this.state.currSlackUID,
     };
-    this.sendMessage(message);
+    this.state.platformFlag ? this.sendZoomMessage(message) : this.sendSlackMessage(message);
   }
+
   toggleViews() {
     this.setState({
       showChatBox: !this.state.showChatBox,
@@ -267,23 +356,23 @@ class chatScreen extends Component {
     });
   }
 
+  togglePlatforms(){
+    this.setState({
+      platformFlag : !this.state.platformFlag
+    });
+  }
+
   render() {
-    let chatBoxProps = this.state.showChatBox
-      ? {
-          xs: 12,
-          sm: 12,
-        }
-      : {
+    let chatBoxProps = this.state.showChatBox ? {
+          xs: 12, sm: 12,
+        }:{ 
           xsHidden: true,
           // smHidden: true,
         };
 
-    let chatListProps = this.state.showChatList
-      ? {
-          xs: 12,
-          sm: 12,
-        }
-      : {
+    let chatListProps = this.state.showChatList ? {
+          xs: 12, sm: 12,
+        } : {
           xsHidden: true,
           // smHidden: true,
         };
@@ -307,13 +396,27 @@ class chatScreen extends Component {
                       onBackPressed={this.toggleUserOptionView.bind(this)}
                     />
                   ) : (
-                    <ChatBox
-                      signedInUser={this.state.user}
-                      messages={this.state.messages}
-                      onSendClicked={this.createMessage.bind(this)}
-                      onBackPressed={this.toggleViews.bind(this)}
-                      targetUser={this.state.selectedUserIndex}
-                  />
+                    <>
+                        { this.state.platformFlag ? (
+                          <ChatBox
+                          signedInUser={this.state.user}
+                          messages={this.state.zoomMessages}
+                          onSendClicked={this.createMessage.bind(this)}
+                          onBackPressed={this.toggleViews.bind(this)}
+                          targetUser={this.state.selectedUserIndex}
+                          platform="zoom"
+                      />
+                        ):(
+                          <ChatBox
+                          signedInUser={this.state.slackuser}
+                          messages={this.state.slackMessages}
+                          onSendClicked={this.createMessage.bind(this)}
+                          onBackPressed={this.toggleViews.bind(this)}
+                          targetUser={this.state.selectedUserIndex}
+                          platform="slack"
+                      />
+                        )}
+                    </>
                   )}
                 </Col>
               </Row>

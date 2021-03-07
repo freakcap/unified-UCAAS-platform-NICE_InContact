@@ -1,22 +1,8 @@
 import React, { Component } from "react";
 import "./AddUser.css";
-import FormControl from "react-bootstrap/FormControl";
-import InputGroup from "react-bootstrap/InputGroup";
 // import Button from "react-bootstrap/Button";
-import FormGroup from "react-bootstrap/FormGroup";
 import {
-    Button,
-    Row,
-    Col,
-    Label
-  } from "reactstrap";
-  import { Control, Form, Errors } from "react-redux-form";
-// import Col from "react-bootstrap/lib/Col";
-import Jumbotron from "react-bootstrap/Jumbotron";
-import {
-  MessageList,
   Navbar as NavbarComponent,
-  Avatar,
 } from "react-chat-elements";
 import axios from "axios";
 
@@ -35,6 +21,9 @@ export default class AddUser extends Component {
     last_name: "",
     zoom : {
         email : ""
+    },
+    slack : {
+      email : ""
     }
   };
   /**
@@ -69,6 +58,9 @@ export default class AddUser extends Component {
         lastname : this.state.last_name,
         zoom : {
             email : this.state.zoom.email
+        },
+        slack : {
+          email : this.state.slack.email
         }
       })
       .then((result) => {
@@ -94,7 +86,10 @@ export default class AddUser extends Component {
         last_name: "",
         zoom : {
             email : ""
-        }   
+        },
+        slack : {
+          email : ""
+        }
     })    
   }
 
@@ -121,6 +116,7 @@ export default class AddUser extends Component {
             <input className="userInput" filter="[^a-zA-Z ]" name="last_name" placeholder="Last Name" onChange={this.inputCheck} value={this.state.last_name} />
             <input className="userInput" name="userid" placeholder="Userid" onChange={this.inputCheck} value={this.state.userid} />
             <input className="userInput" placeholder="Zoom Email Address" onChange={(e) => {this.setState({zoom:{email: e.target.value}})}} value={this.state.zoom.email}/>
+            <input className="userInput" placeholder="Slack Email Address" onChange={(e) => {this.setState({slack:{email: e.target.value}})}} value={this.state.slack.email}/>
             <button className="userButton" onClick={this.submitCheck}>Submit</button>
             <button className="userButton" onClick={this.resetForm}>Reset</button>
           </div>
