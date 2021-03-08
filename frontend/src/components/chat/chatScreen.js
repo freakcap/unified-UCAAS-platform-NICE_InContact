@@ -88,7 +88,7 @@ class chatScreen extends Component {
     axios
       .get("http://localhost:3000" + "/slack/me", {
         headers: {
-          atoken: this.state.zoomtokenData,
+          atoken: this.state.slacktokenData,
           uid : usrid
         },
       })
