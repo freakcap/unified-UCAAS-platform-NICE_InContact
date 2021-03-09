@@ -14,7 +14,7 @@ class mainLogin extends Component {
     axios
       .get("http://localhost:3000" + "/zoom/user", {
         headers: {
-          atoken: this.state.tokendata,
+          atoken: this.state.zoomtokenData,
         },
       })
       .then((result) => {
@@ -23,7 +23,7 @@ class mainLogin extends Component {
         } else {
           this.setState({ zoomLoginFlag: true });
         }
-        console.log(result.data);
+        console.log("AA",result.data);
       })
       .catch((error) => {
         console.log(error);

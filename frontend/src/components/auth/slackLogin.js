@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
-import { config } from '../config/slackConfig';
+import { config } from "../config/slackConfig";
 
 class slackLogin extends Component {
   state = {
@@ -14,23 +14,26 @@ class slackLogin extends Component {
       "https://slack.com/oauth/v2/authorize?scope=" +
       config.scopes +
       "&client_id=" +
-      config.clientId + "&granular_bot_scope=0";
-      window.location = url;
+      config.clientId +
+      "&granular_bot_scope=0";
+    window.location = url;
   }
 
   checkLoginStatus = () => {
-    const userid = localStorage.getItem('SlackUserID');
+    const userid = localStorage.getItem("SlackUserID");
 
     axios
       .get("http://localhost:3000" + "/slack/me", {
         headers: {
           atoken: this.state.tokendata,
-          uid : userid,
+          uid: userid,
         },
       })
       .then((result) => {
         this.setState({ userdata: result.data.user });
         console.log(result.data.user);
+        var url = process.env.REACT_APP_redirectURL + "/";
+        window.location = url;
       })
       .catch((error) => {
         console.log(error);
@@ -39,7 +42,7 @@ class slackLogin extends Component {
   };
 
   componentDidMount() {
-    const tokens = localStorage.getItem('SlackAccessToken');
+    const tokens = localStorage.getItem("SlackAccessToken");
     // console.log("Tokens", tokens);
     // console.log("LOCAL_Login",localStorage.getItem('ZoomAccessToken'));
     if (tokens != null) {
@@ -60,9 +63,7 @@ class slackLogin extends Component {
               <div>
                 <div>
                   <h1>Hello</h1>
-                  <h2>
-                    {this.state.userdata.real_name.toString()}
-                  </h2>
+                  <h2>{this.state.userdata.real_name.toString()}</h2>
                 </div>
               </div>
             </div>

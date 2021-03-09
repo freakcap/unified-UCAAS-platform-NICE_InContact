@@ -172,7 +172,7 @@ class chatScreen extends Component {
       msg.position = "right";
     }
     msg.type = "text";
-    msg.date = parseInt(msg.ts);
+    msg.date = parseInt(msg.ts)*1000;
     msg.text = msg.text;
     return msg;
   }
@@ -376,6 +376,7 @@ class chatScreen extends Component {
           xsHidden: true,
           // smHidden: true,
         };
+        console.log("DATE",Date.now() )
     return (
       <div>
         {this.state.userChatData.Items ? (
@@ -446,3 +447,7 @@ class chatScreen extends Component {
 }
 
 export default chatScreen;
+
+
+//1615299504536
+//1615124964

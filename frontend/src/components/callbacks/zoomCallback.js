@@ -26,7 +26,10 @@ class zoomCallback extends Component {
             "ZoomAccessToken",
             this.state.tokendata.data.access_token
           );
-          console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
+          console.log(
+            "LOCAL_Callback",
+            localStorage.getItem("ZoomAccessToken")
+          );
           axios
             .get("http://localhost:3000" + "/zoom/user", {
               headers: {
@@ -36,6 +39,8 @@ class zoomCallback extends Component {
             .then((result) => {
               this.setState({ userdata: result.data });
               // console.log(result.data);
+              var url = process.env.REACT_APP_redirectURL + "/";
+              window.location = url;
             })
             .catch((error) => {
               console.log(error);
@@ -64,7 +69,7 @@ class zoomCallback extends Component {
       >
         {this.state.userdata.first_name ? (
           <div>
-            <div>
+            {/* <div>
               <div>
                 <div>
                   <h1>Hello</h1>
@@ -86,7 +91,7 @@ class zoomCallback extends Component {
               >
                 Go to chat
               </Link>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div
