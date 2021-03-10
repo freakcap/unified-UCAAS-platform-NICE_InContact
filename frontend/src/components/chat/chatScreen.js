@@ -35,7 +35,7 @@ class chatScreen extends Component {
     showUserOptions: false,
     error: false,
     errorMessage: "",
-    platformFlag : false, // true = zoom, false = slack
+    platformFlag : true, // true = zoom, false = slack
     currSlackUID : "", // User ID
     currSlackCID : "", // Channel ID
   };
@@ -46,12 +46,12 @@ class chatScreen extends Component {
       })
       .then((result) => {
         this.setState({ userChatData: result.data });
-        // console.log(result.data);
+        console.log("working 2");
       })
       .catch((error) => {
         console.log(error);
       });
-      console.log("CHAT", this.state.userChatData);
+      // console.log("CHAT", this.state.userChatData);
   }
 
   checkZoomLoginStatus = () => {
@@ -117,40 +117,16 @@ class chatScreen extends Component {
   componentDidMount() {
     const zoomTokens = localStorage.getItem("ZoomAccessToken");
     const slackTokens = localStorage.getItem("SlackAccessToken");
-    if(this.state.platformFlag){
-      if(zoomTokens != null){
-        this.setState({zoomtokenData : zoomTokens}, () => {
-          this.checkZoomLoginStatus();
-        });
-      }
-      else {
-        let url = process.env.REACT_APP_redirectURL + "/zoomAuth";
-        window.location = url;
-      }
-    }
-    else if(slackTokens != null){
-      this.setState({slacktokenData : slackTokens}, () => {
+    if (zoomTokens != null && slackTokens !=null) {
+      this.setState({ zoomtokenData: zoomTokens, slacktokenData:slackTokens }, () => {
+        this.checkZoomLoginStatus();
         this.checkSlackLoginStatus();
       });
-    }
-    else{
+    } else {
       localStorage.clear();
-      let url = process.env.REACT_APP_redirectURL + "/slackAuth";
+      var url = process.env.REACT_APP_redirectURL + "/";
       window.location = url;
     }
-    // // if (zoomTokens != null && slackTokens !=null) {
-    //   console.log(slackTokens);
-    //   if (slackTokens !=null) {
-    //   // this.setState({ zoomtokenData: zoomTokens, slacktokenData:slackTokens }, () => {
-    //     this.setState({ slacktokenData:slackTokens }, () => {
-    //     // this.checkZoomLoginStatus();
-    //     this.checkSlackLoginStatus();
-    //   });
-    // } else {
-    //   localStorage.clear();
-    //   var url = process.env.REACT_APP_redirectURL + "/";
-    //   window.location = url;
-    // }
   }
 
   myMsgs(msg) {
@@ -259,6 +235,7 @@ class chatScreen extends Component {
   getMessagesIntervalZoom = () => {
     if(!this.state.platformFlag) return;
     const interval = setInterval(() => {
+      if(!this.state.platformFlag) return;
       this.getMessagesZoom();
     }, 4000);
   };
@@ -268,6 +245,7 @@ class chatScreen extends Component {
     this.getSlackTargetDetails();
     
     const interval = setInterval(() => {
+      if(this.state.platformFlag) return;
       this.getMessagesSlack();
     }, 4000);
   };
@@ -276,7 +254,10 @@ class chatScreen extends Component {
   onChatClicked(e) {
     this.toggleViews();
     this.setState({
-      showUserOptions : false
+      showUserOptions : false,
+      platformFlag : true,
+      zoomMessages : [],
+      slackMessages: []
     });
     let users = this.state.userChatData.Items;
     this.setState({ selectedUserIndex: e }, () => {
@@ -359,8 +340,16 @@ class chatScreen extends Component {
   togglePlatforms(){
     this.setState({
       platformFlag : !this.state.platformFlag
+    },()=>{
+      if(this.state.platformFlag){
+        this.getMessagesIntervalZoom();
+      }
+      else{
+        this.getMessagesIntervalSlack();
+      }
     });
   }
+
 
   render() {
     let chatBoxProps = this.state.showChatBox ? {
@@ -395,6 +384,7 @@ class chatScreen extends Component {
                   { this.state.showUserOptions ? (
                     <AddUser 
                       onBackPressed={this.toggleUserOptionView.bind(this)}
+                      refreshOnAdd={this.fetchContacts.bind(this)}
                     />
                   ) : (
                     <>
@@ -404,6 +394,7 @@ class chatScreen extends Component {
                           messages={this.state.zoomMessages}
                           onSendClicked={this.createMessage.bind(this)}
                           onBackPressed={this.toggleViews.bind(this)}
+                          onSwitch={this.togglePlatforms.bind(this)}
                           targetUser={this.state.selectedUserIndex}
                           platform="zoom"
                       />
@@ -413,6 +404,7 @@ class chatScreen extends Component {
                           messages={this.state.slackMessages}
                           onSendClicked={this.createMessage.bind(this)}
                           onBackPressed={this.toggleViews.bind(this)}
+                          onSwitch={this.togglePlatforms.bind(this)}
                           targetUser={this.state.selectedUserIndex}
                           platform="slack"
                       />

@@ -65,7 +65,11 @@ export default class AddUser extends Component {
       })
       .then((result) => {
           console.log(result);
-          if(result.status == 200) alert("User added successfully.");
+          if(result.status == 200) {
+            console.log("working1");
+            this.props.refreshOnAdd();
+            alert("User added successfully.");
+          }
           else alert("User not added");
           this.resetForm();
       })
