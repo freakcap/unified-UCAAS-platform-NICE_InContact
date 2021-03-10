@@ -4,6 +4,7 @@ import InputGroup from "react-bootstrap/InputGroup";
 import Button from "react-bootstrap/Button";
 import FormGroup from "react-bootstrap/FormGroup";
 // import Col from "react-bootstrap/lib/Col";
+import Loader from "react-loader-spinner";
 import Jumbotron from "react-bootstrap/Jumbotron";
 import {
   MessageList,
@@ -43,12 +44,12 @@ export default class ChatBox extends Component {
   }
 
   render() {
-    console.log("Target",this.props.messages);
+    console.log("Target",this.props.messages.length);
     return (
       <div>
         {this.props.targetUser ? (
           <div>
-            <NavbarComponent
+          <NavbarComponent
               left={
                 <div>
                   <Avatar
@@ -61,10 +62,29 @@ export default class ChatBox extends Component {
                     {this.props.targetUser.user.first_name + " " +  this.props.targetUser.user.last_name}  
                     <span> ( Current platform : {this.props.platform} )</span>
                   </p>
-                <Button>Switch Platform</Button>
+                <Button onClick={this.props.onSwitch} 
+            //     style={{
+            //       display: "flex",
+            //       justifyContent: "right",
+            //       alignItems: "right",
+            // }}
+            >Switch Platform</Button>
                 </div>
               }
             />
+          { this.props.messages.length == 0 ? (
+            <div
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              height: "100vh",
+            }}
+          >
+            <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
+          </div> 
+          ) : (
+            <>
             <MessageList
               className="message-list"
               lockable={true}
@@ -95,7 +115,9 @@ export default class ChatBox extends Component {
                 </Button>
               </InputGroup>
             </FormGroup>
-          </div>
+            </>
+          )}
+           </div>
         ) : (
           <div>
             <Jumbotron>
