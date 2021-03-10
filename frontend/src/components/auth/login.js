@@ -12,7 +12,7 @@ class login extends Component {
     var url =
       "https://zoom.us/oauth/authorize?response_type=code&client_id=" +
       process.env.REACT_APP_clientID +
-      "&redirect_uri=" + 
+      "&redirect_uri=" +
       process.env.REACT_APP_redirectURL +
       "/zoom_oauth_callback";
     window.location = url;
@@ -32,6 +32,8 @@ class login extends Component {
           this.authenticate();
         } else {
           this.setState({ userdata: result.data });
+          var url = process.env.REACT_APP_redirectURL + "/";
+          window.location = url;
         }
         console.log(result.data);
         // code: 124, message: "Invalid access token."
@@ -44,9 +46,9 @@ class login extends Component {
   };
 
   componentDidMount() {
-    const tokens = localStorage.getItem("AccessToken");
+    const tokens = localStorage.getItem("ZoomAccessToken");
     if (tokens != null) {
-      console.log("LOCAL_Login", localStorage.getItem("AccessToken"));
+      console.log("LOCAL_Login", localStorage.getItem("ZoomAccessToken"));
       console.log("Tokens", tokens);
       this.setState({ tokendata: tokens }, () => {
         this.checkLoginStatus();
@@ -57,11 +59,17 @@ class login extends Component {
   }
   render() {
     return (
-      <div 
-        style={{display: 'flex',  justifyContent:'center', alignItems:'center', height: '100vh'}}>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         {this.state.userdata.first_name ? (
           <div>
-            <div class="container">
+            {/* <div class="container">
               <div>
                 <div>
                   <h1>Hello</h1>
@@ -83,7 +91,7 @@ class login extends Component {
               >
                 Go to chat
               </Link>
-            </div>
+            </div> */}
           </div>
         ) : (
           <div>

@@ -89,6 +89,9 @@ router.post('/add',function(req, res, next){
             "last_name": req.body.lastname,
             "zoom":{
                 "email": req.body.zoom.email
+            },
+            "slack":{
+                "email": req.body.zoom.email
             }
         }
     };

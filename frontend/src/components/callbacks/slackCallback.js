@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import axios from "axios";
 import queryString from "query-string";
 import { Link } from "react-router-dom";
-import Loader from "react-loader-spinner";
+import { config } from "../config/slackConfig";
 
-class zoomCallback extends Component {
+class slackCallback extends Component {
   state = {
     tokendata: {},
     userdata: {},
@@ -12,33 +12,38 @@ class zoomCallback extends Component {
 
   authenticate() {
     const value = queryString.parse(this.props.location.search);
+    console.log(value.code);
     if (value.code) {
       // replace with server URI
       axios
-        .get("http://localhost:3000" + "/zoom/auth", {
+        .get("http://localhost:3000" + "/slack/auth", {
           headers: {
-            authData: value.code.toString(),
+            authcode: value.code.toString(),
           },
         })
         .then((res) => {
+          console.log(res);
           this.setState({ tokendata: res });
           localStorage.setItem(
-            "ZoomAccessToken",
+            "SlackAccessToken",
             this.state.tokendata.data.access_token
           );
-          console.log(
-            "LOCAL_Callback",
-            localStorage.getItem("ZoomAccessToken")
+          localStorage.setItem(
+            "SlackUserID",
+            this.state.tokendata.data.user_id
           );
+          console.log(this.state.tokendata.data.user_id);
+          //console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
           axios
-            .get("http://localhost:3000" + "/zoom/user", {
+            .get("http://localhost:3000" + "/slack/me", {
               headers: {
                 atoken: this.state.tokendata.data.access_token,
+                uid: this.state.tokendata.data.user_id,
               },
             })
             .then((result) => {
-              this.setState({ userdata: result.data });
-              // console.log(result.data);
+              this.setState({ userdata: result.data.user });
+              console.log(result.data.user);
               var url = process.env.REACT_APP_redirectURL + "/";
               window.location = url;
             })
@@ -59,50 +64,26 @@ class zoomCallback extends Component {
   }
   render() {
     return (
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          height: "100vh",
-        }}
-      >
-        {this.state.userdata.first_name ? (
+      <div>
+        {this.state.userdata.real_name ? (
           <div>
             {/* <div>
               <div>
                 <div>
                   <h1>Hello</h1>
                   <h2>
-                    {this.state.userdata.first_name.toString()}{" "}
-                    {this.state.userdata.last_name.toString()}
+                    {this.state.userdata.real_name.toString()}{" "}
                   </h2>
                 </div>
               </div>
-              <Link
-                to={{
-                  pathname: "/chat",
-                  aboutProps: {
-                    userdata: this.state.userdata,
-                    tokendata: this.state.tokendata,
-                  },
-                }}
-                className="btn btn-primary"
-              >
+              <Link to={{pathname :"/chat" ,aboutProps:{slackuserdata:this.state.userdata, slacktokendata : this.state.tokendata}}} className="btn btn-primary">
                 Go to chat
               </Link>
             </div> */}
           </div>
         ) : (
-          <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
+          <div>
+            <h1>LOGIN</h1>
           </div>
         )}
       </div>
@@ -110,4 +91,4 @@ class zoomCallback extends Component {
   }
 }
 
-export default zoomCallback;
+export default slackCallback;
