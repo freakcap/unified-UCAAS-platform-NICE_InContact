@@ -91,7 +91,7 @@ router.post('/add',function(req, res, next){
                 "email": req.body.zoom.email
             },
             "slack":{
-                "email": req.body.zoom.email
+                "email": req.body.slack.email
             }
         }
     };
