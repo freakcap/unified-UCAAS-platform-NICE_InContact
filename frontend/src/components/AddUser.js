@@ -26,15 +26,6 @@ export default class AddUser extends Component {
       email : ""
     }
   };
-  /**
-   *
-   * Sends a message only if it is not falsy.
-   */
-
-  onAddClicked() {
-    this.props.onSendClicked(this.state.messageText);
-    this.setState({ messageText: "" });
-  }
  
   inputCheck = (e) => {
     let filter = e.target.getAttribute('filter')   
@@ -51,6 +42,7 @@ export default class AddUser extends Component {
         return;
     }
     //add user here
+    // console.log(this.state);
     axios
       .post("http://localhost:3000" + "/addressbook/add", {
         userid : this.state.userid,
@@ -119,8 +111,8 @@ export default class AddUser extends Component {
             <input className="userInput" filter="[^a-zA-Z ]" name="first_name" placeholder="First Name" onChange={this.inputCheck} value={this.state.first_name} />
             <input className="userInput" filter="[^a-zA-Z ]" name="last_name" placeholder="Last Name" onChange={this.inputCheck} value={this.state.last_name} />
             <input className="userInput" name="userid" placeholder="Userid" onChange={this.inputCheck} value={this.state.userid} />
-            <input className="userInput" placeholder="Zoom Email Address" onChange={(e) => {this.setState({zoom:{email: e.target.value}})}} value={this.state.zoom.email}/>
-            <input className="userInput" placeholder="Slack Email Address" onChange={(e) => {this.setState({slack:{email: e.target.value}})}} value={this.state.slack.email}/>
+            <input className="userInput" placeholder="Zoom Email Address / na" onChange={(e) => {this.setState({zoom:{email: e.target.value}})}} value={this.state.zoom.email}/>
+            <input className="userInput" placeholder="Slack Email Address / na" onChange={(e) => {this.setState({slack:{email: e.target.value}})}} value={this.state.slack.email}/>
             <button className="userButton" onClick={this.submitCheck}>Submit</button>
             <button className="userButton" onClick={this.resetForm}>Reset</button>
           </div>

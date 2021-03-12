@@ -233,14 +233,14 @@ class chatScreen extends Component {
       });
   };
   getMessagesIntervalZoom = () => {
-    if(!this.state.platformFlag) return;
+    if(!this.state.platformFlag || this.state.selectedUserIndex.user.zoom.email === "na") return;
     const interval = setInterval(() => {
       if(!this.state.platformFlag) return;
       this.getMessagesZoom();
     }, 4000);
   };
   getMessagesIntervalSlack = () => {
-    if(this.state.platformFlag) return;
+    if(this.state.platformFlag || this.state.selectedUserIndex.user.slack.email === "na") return;
     var uid;
     this.getSlackTargetDetails();
     
@@ -253,17 +253,16 @@ class chatScreen extends Component {
 
   onChatClicked(e) {
     this.toggleViews();
-    this.setState({
+    let users = this.state.userChatData.Items;
+    this.setState({ 
+      selectedUserIndex: e, 
       showUserOptions : false,
       platformFlag : true,
       zoomMessages : [],
-      slackMessages: []
-    });
-    let users = this.state.userChatData.Items;
-    this.setState({ selectedUserIndex: e }, () => {
-      // console.log("dbg",this.state.selectedUserIndex);
+      slackMessages: [],
+      currSlackUID : "",
+      currSlackCID : "" }, () => {
       this.getMessagesIntervalZoom();
-      // this.getChannelId();//Pending
       this.getMessagesIntervalSlack();
     });
     return;

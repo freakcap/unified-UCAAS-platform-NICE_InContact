@@ -62,17 +62,20 @@ export default class ChatBox extends Component {
                     {this.props.targetUser.user.first_name + " " +  this.props.targetUser.user.last_name}  
                     <span> ( Current platform : {this.props.platform} )</span>
                   </p>
-                <Button onClick={this.props.onSwitch} 
-            //     style={{
-            //       display: "flex",
-            //       justifyContent: "right",
-            //       alignItems: "right",
-            // }}
-            >Switch Platform</Button>
+                <Button onClick={this.props.onSwitch} >Switch Platform</Button>
                 </div>
               }
             />
-          { this.props.messages.length == 0 ? (
+          {((this.props.platform === "slack" && this.props.targetUser.user.slack.email === "na") || 
+          (this.props.platform === "zoom" && this.props.targetUser.user.zoom.email === "na")) ? (
+            <div>
+              <p>
+                User not available on this platform.
+              </p>
+              </div>
+          ) : (
+            <>
+            { this.props.messages.length == 0 ? (
             <div
             style={{
               display: "flex",
@@ -117,6 +120,7 @@ export default class ChatBox extends Component {
             </FormGroup>
             </>
           )}
+          </>)}
            </div>
         ) : (
           <div>
