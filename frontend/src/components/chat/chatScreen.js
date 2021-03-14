@@ -46,12 +46,11 @@ class chatScreen extends Component {
       })
       .then((result) => {
         this.setState({ userChatData: result.data });
-        console.log("working 2");
       })
       .catch((error) => {
         console.log(error);
       });
-      // console.log("CHAT", this.state.userChatData);
+      
   }
 
   checkZoomLoginStatus = () => {
@@ -438,7 +437,3 @@ class chatScreen extends Component {
 }
 
 export default chatScreen;
-
-
-//1615299504536
-//1615124964

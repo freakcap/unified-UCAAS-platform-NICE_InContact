@@ -126,4 +126,22 @@ router.post("/sendmessage", (req, res, next) => {
   });
 });
 
+router.get("/status", (req, res, next) => {
+  console.log(req.headers.uid);
+  var options = {
+    method: "GET",
+    url:
+      "https://slack.com/api/users.getPresence?user=" + req.headers.uid,
+    headers: { authorization: "Bearer " + req.headers.atoken },
+  };
+  request(options, (error, response, body) => {
+    if (error) {
+      console.log("API Response Error: ", error);
+    } else {
+      body = JSON.parse(body);
+      console.log("API call ", body);
+      res.send(body);
+    }
+  });
+});
 module.exports = router;

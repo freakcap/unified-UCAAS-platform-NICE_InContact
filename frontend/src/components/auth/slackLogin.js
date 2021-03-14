@@ -56,7 +56,14 @@ class slackLogin extends Component {
   }
   render() {
     return (
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         {this.state.userdata.real_name ? (
           <div>
             <div class="container">
@@ -70,7 +77,7 @@ class slackLogin extends Component {
           </div>
         ) : (
           <div>
-            <h1>LOGIN</h1>
+            <h1>LOGGING YOU IN</h1>
           </div>
         )}
       </div>

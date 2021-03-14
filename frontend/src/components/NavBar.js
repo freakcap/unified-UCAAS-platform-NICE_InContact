@@ -11,9 +11,9 @@ class NavBar extends Component {
   render() {
     console.log("NavBar", this.props.signedInUser.first_name);
     return (
-        <Navbar bg="light">
+        <Navbar bg="primary">
           <Navbar.Brand>
-            <h1>  CHAT</h1>
+            <h1>UCAAS Synchronized Chat</h1>
           </Navbar.Brand>
           <Navbar.Toggle />
           <Navbar.Collapse className="justify-content-end">

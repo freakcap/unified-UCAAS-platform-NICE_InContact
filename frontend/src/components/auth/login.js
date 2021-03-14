@@ -95,7 +95,7 @@ class login extends Component {
           </div>
         ) : (
           <div>
-            <h1>LOGIN</h1>
+            <h1>LOGGING YOU IN</h1>
           </div>
         )}
       </div>
