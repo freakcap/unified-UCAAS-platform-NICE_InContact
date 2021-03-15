@@ -45,7 +45,7 @@ export default class UserList extends Component {
 
   render() {
     let users = this.props.userData;
-    console.log("LIST", this.props.userData);
+    // console.log("LIST", this.props.userData);
     return (
       <div>
         <FormGroup>

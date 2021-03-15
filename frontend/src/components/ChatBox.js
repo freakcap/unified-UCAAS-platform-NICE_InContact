@@ -43,7 +43,7 @@ export default class ChatBox extends Component {
   }
 
   render() {
-    console.log("Target", this.props.messages.length);
+    // console.log("Target", this.props.messages.length);
     return (
       <div>
         {this.props.targetUser ? (
@@ -68,6 +68,7 @@ export default class ChatBox extends Component {
                 <div>
                   <p className="navBarText">
                     <span> Platform : {this.props.platform}</span>
+                    {this.props.targetStatus?(<span>- Sync Status : Active</span>):(<span>- Sync Status : Inactive</span>)}
                   </p>
                 </div>
               }

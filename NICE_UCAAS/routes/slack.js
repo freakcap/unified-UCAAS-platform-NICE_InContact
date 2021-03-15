@@ -37,7 +37,7 @@ router.get("/user", (req, res, next) => {
       console.log("API Response Error: ", error);
     } else {
       body = JSON.parse(body);
-      console.log("API call ", body);
+      console.log("User API call ", body);
       res.send(body);
     }
   });
@@ -127,7 +127,7 @@ router.post("/sendmessage", (req, res, next) => {
 });
 
 router.get("/status", (req, res, next) => {
-  console.log(req.headers.uid);
+  console.log("Uid",req.headers.uidt);
   var options = {
     method: "GET",
     url:
@@ -139,7 +139,7 @@ router.get("/status", (req, res, next) => {
       console.log("API Response Error: ", error);
     } else {
       body = JSON.parse(body);
-      console.log("API call ", body);
+      console.log("Status API call ", body);
       res.send(body);
     }
   });

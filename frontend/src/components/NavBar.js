@@ -9,7 +9,6 @@ import Navbar from "react-bootstrap/Navbar";
 class NavBar extends Component {
   state = {};
   render() {
-    console.log("NavBar", this.props.signedInUser.first_name);
     return (
         <Navbar bg="primary">
           <Navbar.Brand>

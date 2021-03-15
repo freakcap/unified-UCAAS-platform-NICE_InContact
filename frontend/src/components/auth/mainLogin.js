@@ -102,7 +102,7 @@ class mainLogin extends Component {
         ) : (
           <div>
             {this.state.zoomLoginFlag && !this.state.slackLoginFlag ? (
-              <div style={{ margin: "10px" }}>Logged Into Zoom</div>
+              <h3 style={{ margin: "10px" }}>Logged Into Zoom</h3>
             ) : (
               <div>
                 <Button href="/zoomAuth" size="lg" style={{ margin: "10px" }}>
