@@ -96,25 +96,31 @@ class mainLogin extends Component {
           // >
           //   Logged In! Go To Chat
           // </Link>
-          <Button href="/chat" size="lg" style={{ margin: "10px" }} active variant="success">
+          <Button
+            href="/chat"
+            size="lg"
+            style={{ margin: "15px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}
+            active
+            variant="success"
+          >
             Logged In! Go To Chat
           </Button>
         ) : (
           <div>
             {this.state.zoomLoginFlag && !this.state.slackLoginFlag ? (
-              <h3 style={{ margin: "10px" }}>Logged Into Zoom</h3>
+              <h1 style={{ margin: "10px" }}>Logged Into Zoom</h1>
             ) : (
               <div>
-                <Button href="/zoomAuth" size="lg" style={{ margin: "10px" }}>
+                <Button href="/zoomAuth" size="lg" style={{ margin: "20px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold'}}>
                   Zoom Login
                 </Button>
               </div>
             )}
             {this.state.slackLoginFlag && !this.state.zoomLoginFlag ? (
-              <h3 style={{ margin: "10px" }}>Logged Into Slack</h3>
+              <h1 style={{ margin: "10px" }}>Logged Into Slack</h1>
             ) : (
               <div>
-                <Button href="/slackAuth" size="lg" style={{ margin: "10px" }}>
+                <Button href="/slackAuth" size="lg" style={{ margin: "20px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}>
                   Slack Login
                 </Button>
               </div>
