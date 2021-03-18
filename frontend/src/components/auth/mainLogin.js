@@ -99,7 +99,7 @@ class mainLogin extends Component {
           <Button
             href="/chat"
             size="lg"
-            style={{ margin: "15px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}
+            style={{ margin: "15px", height: "80px", width:"300px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}
             active
             variant="success"
           >

@@ -161,7 +161,7 @@ class chatScreen extends Component {
           atoken: this.state.zoomtokenData,
           id: this.state.user.id,
           to: this.state.selectedUserIndex.user.zoom.email,
-          dt: "2021-03-17",
+          dt: "2021-03-18",
         },
       })
       .then((result) => {

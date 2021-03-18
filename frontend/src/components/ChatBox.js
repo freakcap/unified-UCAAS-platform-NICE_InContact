@@ -86,8 +86,8 @@ export default class ChatBox extends Component {
               this.props.targetUser.user.slack.email === "na") ||
             (this.props.platform === "zoom" &&
               this.props.targetUser.user.zoom.email === "na") ? (
-              <div>
-                <p>User not available on this platform.</p>
+              <div style={{marginTop:'10px'}}>
+                <h3>User not available on this platform.</h3>
               </div>
             ) : (
               <>
