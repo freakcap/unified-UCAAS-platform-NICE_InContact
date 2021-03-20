@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import Navbar from "react-bootstrap/Navbar";
+import Button from "react-bootstrap/Button";
 
 /**
  *
@@ -8,21 +9,26 @@ import Navbar from "react-bootstrap/Navbar";
 
 class NavBar extends Component {
   state = {};
+  onLogoutClick = () => {
+    localStorage.clear();
+    var url = process.env.REACT_APP_redirectURL + "/";
+    window.location = url;
+  };
   render() {
-    console.log("NavBar", this.props.signedInUser.first_name);
     return (
-        <Navbar bg="light">
-          <Navbar.Brand>
-            <h1>  CHAT</h1>
-          </Navbar.Brand>
-          <Navbar.Toggle />
-          <Navbar.Collapse className="justify-content-end">
-            <h3>
-              Signed in as:&nbsp;
-              <span>{(this.props.signedInUser || {}).first_name}</span>
-            </h3>
-          </Navbar.Collapse>
-        </Navbar>
+      <Navbar bg="primary">
+        <Navbar.Brand>
+          <h1>UCAAS Synchronized Chat</h1>
+        </Navbar.Brand>
+        <Navbar.Toggle />
+        <Navbar.Collapse className="justify-content-end">
+          <h3>
+            Signed in as:&nbsp;
+            <span>{(this.props.signedInUser || {}).first_name}</span>
+          </h3>
+          <Button onClick={this.onLogoutClick}>Logout</Button>
+        </Navbar.Collapse>
+      </Navbar>
     );
   }
 }

@@ -14,7 +14,7 @@ import Button from "react-bootstrap/Button";
 export default class UserList extends Component {
   state = {
     userData: [],
-    searchQuery: null
+    searchQuery: null,
   };
   componentDidMount() {}
   searchInput(e) {
@@ -32,34 +32,41 @@ export default class UserList extends Component {
   getFilteredUserList() {
     return !this.state.searchQuery
       ? this.props.userData
-      : this.props.userData.filter(user =>
-          user.first_name.toLowerCase().includes(this.state.searchQuery.toLowerCase())
+      : this.props.userData.filter((user) =>
+          user.first_name
+            .toLowerCase()
+            .includes(this.state.searchQuery.toLowerCase())
         );
   }
 
-  toggleViews(){
+  toggleViews() {
     this.props.toggleUserOptionView();
   }
 
   render() {
     let users = this.props.userData;
-    console.log("LIST",this.props.userData);
+    // console.log("LIST", this.props.userData);
     return (
       <div>
         <FormGroup>
-          <FormControl
+          {/* <FormControl
             type="text"
             placeholder="Search for a user here..."
             onInput={this.searchInput.bind(this)}
-          />
+          /> */}
         </FormGroup>
         <Button
-        className="addButton"
-        onClick={this.toggleViews.bind(this)}
+          variant="primary"
+          size="lg"
+          block
+          active
+          className="addButton"
+          style={{marginBottom:'15px'}}
+          onClick={this.toggleViews.bind(this)}
         >
           Add New User
         </Button>
-       {users.length ? (
+        {users.length ? (
           <ChatList
             className={!this.props.showSignInList ? "chat-list" : "user-list"}
             dataSource={users.map((f, i) => {
@@ -76,12 +83,13 @@ export default class UserList extends Component {
               //     lastMessage.text;
               // }
               return {
-                avatar: require(`../static/images/avatar/1.jpg`),
-                alt: f.first_name,
+                avatar:
+                  "https://houstontamilchair.org/wp-content/uploads/2020/07/parent-directory-avatar-2png-avatar-png-256_256.png",
+                alt: f.first_name[0],
                 title: f.first_name + " " + f.last_name,
                 date: date,
                 // unread: f.unread,
-                user: f
+                user: f,
               };
             })}
             onClick={
