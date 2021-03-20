@@ -41,78 +41,8 @@ class chatScreen extends Component {
     targetUserStatus: true,
   };
 
-  fetchContacts() {
-    axios
-      .get("http://localhost:3000" + "/addressbook/contacts", {})
-      .then((result) => {
-        this.setState({ userChatData: result.data });
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }
-
-  checkZoomLoginStatus = () => {
-    axios
-      .get("http://localhost:3000" + "/zoom/user", {
-        headers: {
-          atoken: this.state.zoomtokenData,
-        },
-      })
-      .then((result) => {
-        if (result.data.code == 124) {
-          console.log("error");
-          localStorage.clear();
-          var url = process.env.REACT_APP_redirectURL + "/";
-          window.location = url;
-        } else {
-          this.setState({ user: result.data });
-          // this.setState({ user: this.props.location.aboutProps.userdata });
-          this.fetchContacts();
-        }
-        // console.log(result.data);
-        // code: 124, message: "Invalid access token."
-      })
-      .catch((error) => {
-        console.log(error);
-        localStorage.clear();
-        var url = process.env.REACT_APP_redirectURL + "/zoomAuth";
-        window.location = url;
-      });
-  };
-
-  checkSlackLoginStatus = () => {
-    let usrid = localStorage.getItem("SlackUserID");
-    axios
-      .get("http://localhost:3000" + "/slack/me", {
-        headers: {
-          atoken: this.state.slacktokenData,
-          uid: usrid,
-        },
-      })
-      .then((result) => {
-        if (result.data.ok == "false") {
-          console.log("error");
-          localStorage.clear();
-          var url = process.env.REACT_APP_redirectURL + "/slackAuth";
-          window.location = url;
-        } else {
-          this.setState({ slackuser: result.data });
-          // this.setState({ user: this.props.location.aboutProps.userdata });
-          this.fetchContacts();
-        }
-        // console.log(result.data);
-        // code: 124, message: "Invalid access token."
-      })
-      .catch((error) => {
-        console.log(error);
-        localStorage.clear();
-        var url = process.env.REACT_APP_redirectURL + "/";
-        window.location = url;
-      });
-  };
-
   componentDidMount() {
+    // Get tokens for local storage
     const zoomTokens = localStorage.getItem("ZoomAccessToken");
     const slackTokens = localStorage.getItem("SlackAccessToken");
     if (zoomTokens != null && slackTokens != null) {
@@ -130,6 +60,77 @@ class chatScreen extends Component {
     }
   }
 
+  /* Fetch Contacts from Address Book */
+  fetchContacts() {
+    axios
+      .get("http://localhost:3000" + "/addressbook/contacts", {})
+      .then((result) => {
+        this.setState({ userChatData: result.data });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  /* Check zoom login */
+  checkZoomLoginStatus = () => {
+    axios
+      .get("http://localhost:3000" + "/zoom/user", {
+        headers: {
+          atoken: this.state.zoomtokenData,
+        },
+      })
+      .then((result) => {
+        if (result.data.code == 124) {
+          console.log("error");
+          localStorage.clear();
+          var url = process.env.REACT_APP_redirectURL + "/";
+          window.location = url;
+        } else {
+          this.setState({ user: result.data });
+          this.fetchContacts();
+        }
+        // code: 124, message: "Invalid access token."
+      })
+      .catch((error) => {
+        console.log(error);
+        localStorage.clear();
+        var url = process.env.REACT_APP_redirectURL + "/zoomAuth";
+        window.location = url;
+      });
+  };
+
+  /* Check Slack login */
+  checkSlackLoginStatus = () => {
+    let usrid = localStorage.getItem("SlackUserID");
+    axios
+      .get("http://localhost:3000" + "/slack/me", {
+        headers: {
+          atoken: this.state.slacktokenData,
+          uid: usrid,
+        },
+      })
+      .then((result) => {
+        if (result.data.ok == "false") {
+          console.log("error");
+          localStorage.clear();
+          var url = process.env.REACT_APP_redirectURL + "/slackAuth";
+          window.location = url;
+        } else {
+          this.setState({ slackuser: result.data });
+          this.fetchContacts();
+        }
+        // code: 124, message: "Invalid access token."
+      })
+      .catch((error) => {
+        console.log(error);
+        localStorage.clear();
+        var url = process.env.REACT_APP_redirectURL + "/";
+        window.location = url;
+      });
+  };
+
+  /* Converts zoom message into required message */
   myMsgs(msg) {
     if (msg.sender == this.sender) {
       msg.position = "right";
@@ -142,6 +143,7 @@ class chatScreen extends Component {
     return msg;
   }
 
+  /* Converts slack message into required message */
   myMsgsSlack(msg) {
     if (msg.user == this.receiver) {
       msg.position = "left";
@@ -154,6 +156,7 @@ class chatScreen extends Component {
     return msg;
   }
 
+  /* Fetch Zoom messages */
   getMessagesZoom = () => {
     axios
       .get("http://localhost:3000" + "/zoom/messages", {
@@ -177,6 +180,7 @@ class chatScreen extends Component {
       });
   };
 
+  /* Get Slack target details UID and CID */
   getSlackTargetDetails() {
     axios
       .get("http://localhost:3000" + "/slack/user", {
@@ -187,7 +191,6 @@ class chatScreen extends Component {
       })
       .then((result) => {
         this.setState({ currSlackUID: result.data.user.id }, () => {
-          // console.log(this.state.currSlackUID);
           axios
             .get("http://localhost:3000" + "/slack/openconversation", {
               headers: {
@@ -196,7 +199,6 @@ class chatScreen extends Component {
               },
             })
             .then((res) => {
-              // console.log(res);
               this.setState({ currSlackCID: res.data.channel.id }, () => {});
             })
             .catch((error) => {
@@ -204,7 +206,6 @@ class chatScreen extends Component {
               // this.authenticate();
             });
         });
-        // console.log(result.data.user);
       })
       .catch((error) => {
         console.log(error);
@@ -212,6 +213,7 @@ class chatScreen extends Component {
       });
   }
 
+  /* Fetch Slack messages */
   getMessagesSlack = () => {
     axios
       .get("http://localhost:3000" + "/slack/messages", {
@@ -221,7 +223,6 @@ class chatScreen extends Component {
         },
       })
       .then((result) => {
-        // console.log(result);
         var receiver = this.state.currSlackUID;
         var msgs = result.data.messages.map(this.myMsgsSlack, {
           receiver: receiver,
@@ -233,6 +234,8 @@ class chatScreen extends Component {
         console.log(error);
       });
   };
+
+  /* Poll zoom messages */
   getMessagesIntervalZoom = () => {
     if (
       !this.state.platformFlag ||
@@ -244,6 +247,8 @@ class chatScreen extends Component {
       this.getMessagesZoom();
     }, 4000);
   };
+
+  /* Poll slack messages */
   getMessagesIntervalSlack = () => {
     if (
       this.state.platformFlag ||
@@ -258,13 +263,18 @@ class chatScreen extends Component {
       this.getMessagesSlack();
     }, 4000);
   };
+
+  /* Poll user status */
   checkUserStatusInterval = () => {
     const interval = setInterval(() => {
       this.checkUserStatus();
     }, 5000);
   };
+
+  /* Check user presence status */
   checkUserStatus = () => {
     if (this.state.selectedUserIndex.user.zoom.email !== "na") {
+      // replace with server uri
       axios
         .get("http://localhost:3000" + "/zoom/status", {
           headers: {
@@ -273,9 +283,6 @@ class chatScreen extends Component {
           },
         })
         .then((result) => {
-          console.log("ZOOM", result.data);
-          console.log("ZOOMStatus", result.data.presence_status);
-
           if (result.data.presence_status == "Available")
             this.setState({ zoomStatus: true });
           else this.setState({ zoomStatus: false });
@@ -285,13 +292,13 @@ class chatScreen extends Component {
           } else {
             this.setState({ targetUserStatus: false });
           }
-          console.log(this.state.targetUserStatus);
         })
         .catch((error) => {
           console.log(error);
         });
     }
     if (this.state.selectedUserIndex.user.slack.email !== "na") {
+      // Replace with server uri
       axios
         .get("http://localhost:3000" + "/slack/user", {
           headers: {
@@ -301,6 +308,7 @@ class chatScreen extends Component {
         })
         .then((result) => {
           this.setState({ currSlackUID: result.data.user.id }, () => {
+            // Replace with server uri
             axios
               .get("http://localhost:3000" + "/slack/status", {
                 headers: {
@@ -309,7 +317,6 @@ class chatScreen extends Component {
                 },
               })
               .then((result) => {
-                console.log("Slack", result.data.presence);
                 if (result.data.presence == "active")
                   this.setState({ slackStatus: true });
                 else this.setState({ slackStatus: false });
@@ -318,7 +325,6 @@ class chatScreen extends Component {
                 } else {
                   this.setState({ targetUserStatus: false });
                 }
-                console.log(this.state.targetUserStatus);
               })
               .catch((error) => {
                 console.log(error);
@@ -356,12 +362,13 @@ class chatScreen extends Component {
     return;
   }
 
+  /* Send message zoom */
   sendZoomMessage(message) {
-    // console.log("To", message.to);
     var data = {
       message: message.text,
       to: message.to,
     };
+    // Replace with server uri
     axios
       .post("http://localhost:3000" + "/zoom/sendmessage", data, {
         headers: {
@@ -370,7 +377,6 @@ class chatScreen extends Component {
         },
       })
       .then((result) => {
-        // console.log("Send", result);
         this.getMessagesZoom();
       })
       .catch((error) => {
@@ -378,12 +384,13 @@ class chatScreen extends Component {
       });
   }
 
+  /* Send message slack */
   sendSlackMessage(message) {
-    // console.log("To", message.to);
     var data = {
       message: message.text,
       to: message.to,
     };
+    // Replace with server uri
     axios
       .post("http://localhost:3000" + "/slack/sendmessage", data, {
         headers: {
@@ -391,7 +398,6 @@ class chatScreen extends Component {
         },
       })
       .then((result) => {
-        // console.log("Send", result);
         this.getMessagesSlack();
       })
       .catch((error) => {
@@ -399,6 +405,7 @@ class chatScreen extends Component {
       });
   }
 
+  /* Creates message in required format for sending */
   createMessage(text) {
     let message = {
       type: "text",
@@ -415,6 +422,7 @@ class chatScreen extends Component {
       : this.sendSlackMessage(message);
   }
 
+  /* To make responsive */
   toggleViews() {
     this.setState({
       showChatBox: !this.state.showChatBox,
@@ -422,12 +430,14 @@ class chatScreen extends Component {
     });
   }
 
+  /* Toggle for adding user */
   toggleUserOptionView() {
     this.setState({
       showUserOptions: !this.state.showUserOptions,
     });
   }
 
+  /* Toggle to switch platforms */
   togglePlatforms() {
     this.setState(
       {

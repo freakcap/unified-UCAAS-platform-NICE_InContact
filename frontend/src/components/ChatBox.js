@@ -43,7 +43,6 @@ export default class ChatBox extends Component {
   }
 
   render() {
-    // console.log("Target", this.props.messages.length);
     return (
       <div>
         {this.props.targetUser ? (

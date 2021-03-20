@@ -43,8 +43,6 @@ class slackLogin extends Component {
 
   componentDidMount() {
     const tokens = localStorage.getItem("SlackAccessToken");
-    // console.log("Tokens", tokens);
-    // console.log("LOCAL_Login",localStorage.getItem('ZoomAccessToken'));
     if (tokens != null) {
       this.setState({ tokendata: tokens });
       this.checkLoginStatus();

@@ -32,8 +32,6 @@ class slackCallback extends Component {
             "SlackUserID",
             this.state.tokendata.data.user_id
           );
-          console.log(this.state.tokendata.data.user_id);
-          //console.log("LOCAL_Callback", localStorage.getItem("ZoomAccessToken"));
           axios
             .get("http://localhost:3000" + "/slack/me", {
               headers: {
@@ -74,19 +72,6 @@ class slackCallback extends Component {
       >
         {this.state.userdata.real_name ? (
           <div>
-            {/* <div>
-              <div>
-                <div>
-                  <h1>Hello</h1>
-                  <h2>
-                    {this.state.userdata.real_name.toString()}{" "}
-                  </h2>
-                </div>
-              </div>
-              <Link to={{pathname :"/chat" ,aboutProps:{slackuserdata:this.state.userdata, slacktokendata : this.state.tokendata}}} className="btn btn-primary">
-                Go to chat
-              </Link>
-            </div> */}
           </div>
         ) : (
           <div>

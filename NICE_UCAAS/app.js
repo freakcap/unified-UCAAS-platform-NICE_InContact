@@ -6,7 +6,6 @@ var logger = require('morgan');
 const bodyParser = require('body-parser');
 var cors = require('cors');
 
-var indexRouter = require('./routes/index');
 var zoomRouter = require('./routes/zoom');
 var dbrouter = require('./db/dbrouter.js');
 var slackRouter = require('./routes/slack');
@@ -15,10 +14,6 @@ var app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 app.use(cors());
-// view engine setup
-
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'jade');
 
 app.use(logger('dev'));
 app.use(express.json());
@@ -26,7 +21,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use('/', indexRouter);
 app.use('/zoom', zoomRouter);
 app.use('/addressbook',dbrouter);
 app.use('/slack', slackRouter);

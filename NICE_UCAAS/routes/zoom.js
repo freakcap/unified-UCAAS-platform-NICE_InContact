@@ -5,9 +5,9 @@ require('dotenv/config')
 const request = require('request')
 var authcode = null;
 
+/* Authentication */
 router.get('/auth', (req, res, next) => {
     const encodedCredentials = Buffer.from(`${process.env.clientID}:${process.env.clientSecret}`).toString('base64');
-    // console.log(req.headers.authdata);
     var tokenUrl = "https://zoom.us/oauth/token?grant_type=authorization_code&code=" + req.headers.authdata + "&redirect_uri=" + process.env.redirectURL + "/zoom_oauth_callback";
     axios.post(tokenUrl,
     {},
@@ -21,8 +21,8 @@ router.get('/auth', (req, res, next) => {
     .catch((error)=>{console.log(error)});
 });
 
+/* Get user */
 router.get('/user', (req, res, next) => {
-
     var options = {
         method: 'GET',
         url: 'https://api.zoom.us/v2/users/me',
@@ -34,13 +34,12 @@ router.get('/user', (req, res, next) => {
                 console.log('API Response Error: ', error)
             } else {
                 body = JSON.parse(body);
-                console.log('API call ', body);
                 res.send(body);
             }
         })
   });
   
-
+/* Get Contacts (Not used) */
 router.get('/contacts', (req, res, next) => {
   var options = {
       method: 'GET',
@@ -53,20 +52,14 @@ router.get('/contacts', (req, res, next) => {
               console.log('API Response Error: ', error)
           } else {
               body = JSON.parse(body);
-              console.log('API call ', body);
               var JSONResponse = '<pre><code>' + JSON.stringify(body, null, 2) + '</code></pre>'
               res.send(body);
           }
       })
 });
 
-router.post('/send',function(req, res, next){
-  res.send("send endpoint");
-});
-
+/* Get Messages */
 router.get('/messages', (req, res, next) => {
-  //Enter Access Token
-    console.log(req.headers.dt);
   var options = {
       method: 'GET',
       url: 'https://api.zoom.us/v2/chat/users/'+req.headers.id+'/messages?page_size=10',
@@ -78,19 +71,13 @@ router.get('/messages', (req, res, next) => {
               console.log('API Response Error: ', error)
           } else {
               body = JSON.parse(body);
-              // console.log('API call ', body);
               res.send(body);
           }
       })
 });
-router.get('/test',(req,res,next)=>{
-  res.send("hiii");
-});
 
+/* Send Message */
 router.post('/sendmessage', (req, res, next) => {
-  //Enter Access Token
-  console.log(req.body.message);
-  console.log("To",req.body.to);
   var options = {
       method: 'POST',
       url: 'https://api.zoom.us/v2/chat/users/'+req.headers.id+'/messages',//Enter UserID
@@ -102,13 +89,12 @@ router.post('/sendmessage', (req, res, next) => {
           if (error) {
               console.log('API Response Error: ', error)
           } else {
-              console.log("body: ",body);
               res.send(body);
           }
       })
 });
 
-
+/* Get Presence Status */
 router.get('/status', (req, res, next) => {
   console.log(req.headers.atoken)
   var options = {
@@ -122,7 +108,6 @@ router.get('/status', (req, res, next) => {
               console.log('API Response Error: ', error)
           } else {
               body = JSON.parse(body);
-              console.log('Zoom status API call ', body);
               res.send(body);
           }
       })

@@ -88,14 +88,6 @@ class mainLogin extends Component {
         }}
       >
         {this.state.slackLoginFlag && this.state.zoomLoginFlag ? (
-          // <Link
-          //   to={{
-          //     pathname: "/chat",
-          //   }}
-          //   className="btn btn-primary"
-          // >
-          //   Logged In! Go To Chat
-          // </Link>
           <Button
             href="/chat"
             size="lg"

@@ -7,6 +7,7 @@ var authcode = null;
 // url: "https://slack.com/api/oauth.v2.access?code=" + req.headers.authcode + "&client_id=" + process.env.slackClientID + "&client_secret=" +  process.env.slackClientSecret,
 
 
+/* Authentication */
 router.get("/auth", (req, res, next) => {
   var ac = req.headers.authcode;
    var options = {
@@ -25,6 +26,7 @@ router.get("/auth", (req, res, next) => {
    });
  });
  
+/* Get User by email */
 router.get("/user", (req, res, next) => {
   var options = {
     method: "GET",
@@ -43,6 +45,7 @@ router.get("/user", (req, res, next) => {
   });
 });
 
+/* Get details of logged in user */
 router.get("/me", (req, res, next) => {
   console.log(req.headers.uid);
   var options = {
@@ -62,6 +65,7 @@ router.get("/me", (req, res, next) => {
   });
 });
 
+/* Open a direct message channel with the target user */
 router.get("/openconversation", (req, res, next) => {
   var options = {
     method: "POST",
@@ -84,9 +88,8 @@ router.get("/openconversation", (req, res, next) => {
   });
 });
 
+/* Get Messages */
 router.get("/messages", (req, res, next) => {
-  //Enter Access Token
-  // console.log(req.headers.dt);
   var options = {
     method: "GET",
     url:
@@ -105,6 +108,7 @@ router.get("/messages", (req, res, next) => {
   });
 });
 
+/* Send Message */
 router.post("/sendmessage", (req, res, next) => {
   var options = {
     method: "POST",
@@ -126,6 +130,7 @@ router.post("/sendmessage", (req, res, next) => {
   });
 });
 
+/* Get presence status */
 router.get("/status", (req, res, next) => {
   console.log("Uid",req.headers.uidt);
   var options = {

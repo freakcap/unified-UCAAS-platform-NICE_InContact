@@ -96,47 +96,6 @@ router.post('/add',function(req, res, next){
         }
     };
 
-    // // check whether contact already present
-
-    // var getParams = {
-    //     TableName : tableName,
-    //     Key: {
-    //         "UserId" : req.body.userid
-    //     }
-    // }
-    // var getResult;
-    // docClient.get(getParams, function(err, data){
-    //     if(err){
-    //         console.log(JSON.stringify(err,null,2));
-    //         docClient.put(params, function(err, data) {
-    //             if (err) {
-    //                 console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-    //             } else {
-    //                 console.log(" Item added");
-    //                 res.send("item added");
-    //             }
-    //         });
-    //     } else {
-    //         console.log("item found.");
-    //         console.log("Item : ", JSON.stringify(data, null, 2));
-    //         console.log((data.hasOwnProperty('first_name')));
-    //         if(data.get('Item').hasOwnProperty('first_name')){
-    //             res.send("Userid already exists");
-    //         }
-    //         else{
-    //             docClient.put(params, function(err, data) {
-    //                 if (err) {
-    //                     console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
-    //                 } else {
-    //                     console.log();
-    //                     console.log(" Item added");
-    //                     res.send("item added");
-    //                 }
-    //             });
-    //         }
-    //     }
-    // })
-
     docClient.put(params, function(err, data) {
                     if (err) {
                         console.error("Unable to add item. Error JSON:", JSON.stringify(err, null, 2));
