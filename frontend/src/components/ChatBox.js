@@ -13,7 +13,6 @@ import {
 } from "react-chat-elements";
 import axios from "axios";
 
-
 export default class ChatBox extends Component {
   state = {
     messageText: "",
@@ -44,84 +43,106 @@ export default class ChatBox extends Component {
   }
 
   render() {
-    console.log("Target",this.props.messages.length);
     return (
       <div>
         {this.props.targetUser ? (
           <div>
-          <NavbarComponent
+            <NavbarComponent
               left={
                 <div>
                   <Avatar
-                    src={`../static/images/avatar/${this.props.targetUser.id}.jpg`}
+                    src={`https://houstontamilchair.org/wp-content/uploads/2020/07/parent-directory-avatar-2png-avatar-png-256_256.png`}
                     alt={"image"}
                     size="large"
                     type="circle flexible"
                   />
                   <p className="navBarText">
-                    {this.props.targetUser.user.first_name + " " +  this.props.targetUser.user.last_name}  
-                    <span> ( Current platform : {this.props.platform} )</span>
+                    {this.props.targetUser.user.first_name +
+                      " " +
+                      this.props.targetUser.user.last_name}
                   </p>
-                <Button onClick={this.props.onSwitch} >Switch Platform</Button>
+                </div>
+              }
+              center={
+                <div>
+                  <p className="navBarText">
+                    <span> Platform : {this.props.platform}</span>
+                    {this.props.targetStatus?(<span>- Sync Status : Active</span>):(<span>- Sync Status : Inactive</span>)}
+                  </p>
+                </div>
+              }
+              right={
+                <div>
+                  <Button
+                    onClick={this.props.onSwitch}
+                  >
+                    Switch Platform
+                  </Button>
                 </div>
               }
             />
-          {((this.props.platform === "slack" && this.props.targetUser.user.slack.email === "na") || 
-          (this.props.platform === "zoom" && this.props.targetUser.user.zoom.email === "na")) ? (
-            <div>
-              <p>
-                User not available on this platform.
-              </p>
+            {(this.props.platform === "slack" &&
+              this.props.targetUser.user.slack.email === "na") ||
+            (this.props.platform === "zoom" &&
+              this.props.targetUser.user.zoom.email === "na") ? (
+              <div style={{marginTop:'10px'}}>
+                <h3>User not available on this platform.</h3>
               </div>
-          ) : (
-            <>
-            { this.props.messages.length == 0 ? (
-            <div
-            style={{
-              display: "flex",
-              justifyContent: "center",
-              alignItems: "center",
-              height: "100vh",
-            }}
-          >
-            <Loader type="TailSpin" color="#00BFFF" height={100} width={100} />
-          </div> 
-          ) : (
-            <>
-            <MessageList
-              className="message-list"
-              lockable={true}
-              toBottomHeight={"100%"}
-              dataSource={this.props.messages}
-            />
-            <FormGroup>
-              <InputGroup>
-                <FormControl
-                  type="text"
-                  value={this.state.messageText}
-                  onChange={this.onMessageInputChange.bind(this)}
-                  onKeyPress={this.onMessageKeyPress.bind(this)}
-                  placeholder="Type a message here (Limit 3000 characters)..."
-                  ref="messageTextBox"
-                  className="messageTextBox"
-                  maxLength="3000"
-                  autoFocus
-                />
-                <Button>
-                  <Button
-                    disabled={!this.state.messageText}
-                    className="sendButton"
-                    onClick={this.onSendClicked.bind(this)}
+            ) : (
+              <>
+                {this.props.messages.length == 0 ? (
+                  <div
+                    style={{
+                      display: "flex",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      height: "100vh",
+                    }}
                   >
-                    Send
-                  </Button>
-                </Button>
-              </InputGroup>
-            </FormGroup>
-            </>
-          )}
-          </>)}
-           </div>
+                    <Loader
+                      type="TailSpin"
+                      color="#00BFFF"
+                      height={100}
+                      width={100}
+                    />
+                  </div>
+                ) : (
+                  <>
+                    <MessageList
+                      className="message-list"
+                      lockable={true}
+                      toBottomHeight={"100%"}
+                      dataSource={this.props.messages}
+                    />
+                    <FormGroup>
+                      <InputGroup>
+                        <FormControl
+                          type="text"
+                          value={this.state.messageText}
+                          onChange={this.onMessageInputChange.bind(this)}
+                          onKeyPress={this.onMessageKeyPress.bind(this)}
+                          placeholder="Type a message here (Limit 3000 characters)..."
+                          ref="messageTextBox"
+                          className="messageTextBox"
+                          maxLength="3000"
+                          autoFocus
+                        />
+                        <Button>
+                          <Button
+                            disabled={!this.state.messageText}
+                            className="sendButton"
+                            onClick={this.onSendClicked.bind(this)}
+                          >
+                            Send
+                          </Button>
+                        </Button>
+                      </InputGroup>
+                    </FormGroup>
+                  </>
+                )}
+              </>
+            )}
+          </div>
         ) : (
           <div>
             <Jumbotron>

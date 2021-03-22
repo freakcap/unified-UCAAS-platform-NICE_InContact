@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Button from "react-bootstrap/Button";
 
 class mainLogin extends Component {
   state = {
@@ -23,7 +24,7 @@ class mainLogin extends Component {
         } else {
           this.setState({ zoomLoginFlag: true });
         }
-        console.log("AA",result.data);
+        console.log("AA", result.data);
       })
       .catch((error) => {
         console.log(error);
@@ -78,44 +79,42 @@ class mainLogin extends Component {
     console.log(this.state.zoomLoginFlag);
     console.log(this.state.slackLoginFlag);
     return (
-      <div>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          height: "100vh",
+        }}
+      >
         {this.state.slackLoginFlag && this.state.zoomLoginFlag ? (
-          <Link
-            to={{
-              pathname: "/chat",
-            }}
-            className="btn btn-primary"
+          <Button
+            href="/chat"
+            size="lg"
+            style={{ margin: "15px", height: "80px", width:"300px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}
+            active
+            variant="success"
           >
             Logged In! Go To Chat
-          </Link>
+          </Button>
         ) : (
           <div>
             {this.state.zoomLoginFlag && !this.state.slackLoginFlag ? (
-              <div>Logged Into Zoom</div>
+              <h1 style={{ margin: "10px" }}>Logged Into Zoom</h1>
             ) : (
               <div>
-                <Link
-                  to={{
-                    pathname: "/zoomAuth",
-                  }}
-                  className="btn btn-primary"
-                >
+                <Button href="/zoomAuth" size="lg" style={{ margin: "20px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold'}}>
                   Zoom Login
-                </Link>
+                </Button>
               </div>
             )}
             {this.state.slackLoginFlag && !this.state.zoomLoginFlag ? (
-              <div>Logged Into Slack</div>
+              <h1 style={{ margin: "10px" }}>Logged Into Slack</h1>
             ) : (
               <div>
-                <Link
-                  to={{
-                    pathname: "/slackAuth",
-                  }}
-                  className="btn btn-primary"
-                >
+                <Button href="/slackAuth" size="lg" style={{ margin: "20px", height: "80px", width:"200px",padding:'25px', fontSize:'20px', fontWeight:'bold' }}>
                   Slack Login
-                </Link>
+                </Button>
               </div>
             )}
           </div>

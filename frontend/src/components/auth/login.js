@@ -69,33 +69,10 @@ class login extends Component {
       >
         {this.state.userdata.first_name ? (
           <div>
-            {/* <div class="container">
-              <div>
-                <div>
-                  <h1>Hello</h1>
-                  <h2>
-                    {this.state.userdata.first_name.toString()}{" "}
-                    {this.state.userdata.last_name.toString()}
-                  </h2>
-                </div>
-              </div>
-              <Link
-                to={{
-                  pathname: "/chat",
-                  aboutProps: {
-                    userdata: this.state.userdata,
-                    tokendata: this.state.tokendata,
-                  },
-                }}
-                className="btn btn-primary"
-              >
-                Go to chat
-              </Link>
-            </div> */}
           </div>
         ) : (
           <div>
-            <h1>LOGIN</h1>
+            <h1>LOGGING YOU IN</h1>
           </div>
         )}
       </div>

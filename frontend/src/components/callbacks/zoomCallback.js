@@ -38,7 +38,6 @@ class zoomCallback extends Component {
             })
             .then((result) => {
               this.setState({ userdata: result.data });
-              // console.log(result.data);
               var url = process.env.REACT_APP_redirectURL + "/";
               window.location = url;
             })
@@ -69,29 +68,6 @@ class zoomCallback extends Component {
       >
         {this.state.userdata.first_name ? (
           <div>
-            {/* <div>
-              <div>
-                <div>
-                  <h1>Hello</h1>
-                  <h2>
-                    {this.state.userdata.first_name.toString()}{" "}
-                    {this.state.userdata.last_name.toString()}
-                  </h2>
-                </div>
-              </div>
-              <Link
-                to={{
-                  pathname: "/chat",
-                  aboutProps: {
-                    userdata: this.state.userdata,
-                    tokendata: this.state.tokendata,
-                  },
-                }}
-                className="btn btn-primary"
-              >
-                Go to chat
-              </Link>
-            </div> */}
           </div>
         ) : (
           <div

@@ -41,8 +41,8 @@ export default class AddUser extends Component {
         alert("Userid cannot be empty.");
         return;
     }
-    //add user here
-    // console.log(this.state);
+
+    // Replace with server uri
     axios
       .post("http://localhost:3000" + "/addressbook/add", {
         userid : this.state.userid,
@@ -90,7 +90,6 @@ export default class AddUser extends Component {
   }
 
   render() {
-    // console.log("Target",this.props.targetUser);
     return (
       <div>
           <NavbarComponent
